@@ -98,61 +98,62 @@ def shoes(emai, passw, gbp, eur, name, driv, t):
     return df
 
 
-print('data.txt:\n'
-      '1. Put stockx email\n'
-      '2. Put stockx password\n'
-      '3. Put GBP exchange rate with "." format\n'
-      '4. Put EUR exchange rate with "." format\n'
-      '\n'
-      'shoes.xlsx:\n'
-      '1. Put sku\n'
-      "2. Put sizes into that format:\n"
-      "Men - e.g. 9/9.5\n"
-      "Women - e.g. 9W/9.5W\n"
-      "Gs - e.g. 6Y/6.5Y\n"
-      '3. Put price with "." format\n'
-      '4. Put "Faktura" if you add VAT to margin\n'
-      '\n'
-      'Write anything if you want to start\n')
-input()
+def main():
+    print('data.txt:\n'
+          '1. Put stockx email\n'
+          '2. Put stockx password\n'
+          '3. Put GBP exchange rate with "." format\n'
+          '4. Put EUR exchange rate with "." format\n'
+          '\n'
+          'shoes.xlsx:\n'
+          '1. Put sku\n'
+          "2. Put sizes into that format:\n"
+          "Men - e.g. 9/9.5\n"
+          "Women - e.g. 9W/9.5W\n"
+          "Gs - e.g. 6Y/6.5Y\n"
+          '3. Put price with "." format\n'
+          '4. Put "Faktura" if you add VAT to margin\n'
+          '\n'
+          'Write anything if you want to start\n')
+    input()
 
-try:
-    os.remove("stock.xlsx")
-except FileNotFoundError:
-    pass
-wb = Workbook()
-wb.save(filename='stock.xlsx')
-data = data()
-email = data[0]
-password = data[1]
-kurs_gbp = data[2]
-kurs_eur = data[3]
-sheets = pd.ExcelFile('shoes.xlsx').sheet_names
+    try:
+        os.remove("stock.xlsx")
+    except FileNotFoundError:
+        pass
+    wb = Workbook()
+    wb.save(filename='stock.xlsx')
+    data = data()
+    email = data[0]
+    password = data[1]
+    kurs_gbp = data[2]
+    kurs_eur = data[3]
+    sheets = pd.ExcelFile('shoes.xlsx').sheet_names
 
-options = Options()
-options.add_argument("start-maximized")
-options.add_experimental_option("excludeSwitches", ["enable-automation"])
-options.add_experimental_option('useAutomationExtension', False)
-s = Service('C:\\BrowserDrivers\\chromedriver.exe')
-driver = webdriver.Chrome(options=options,
-                          executable_path="C:/Users/dratw/Documents/PythonProjects/priceChecker/chromedriver.exe")
-stealth(driver,
-        languages=["en-US", "en"],
-        vendor="Google Inc.",
-        platform="Win32",
-        webgl_vendor="Intel Inc.",
-        renderer="Intel Iris OpenGL Engine",
-        fix_hairline=True,
-        )
+    options = Options()
+    options.add_argument("start-maximized")
+    options.add_experimental_option("excludeSwitches", ["enable-automation"])
+    options.add_experimental_option('useAutomationExtension', False)
+    s = Service('C:\\BrowserDrivers\\chromedriver.exe')
+    driver = webdriver.Chrome(options=options,
+                              executable_path="C:/Users/dratw/Documents/PythonProjects/priceChecker/chromedriver.exe")
+    stealth(driver,
+            languages=["en-US", "en"],
+            vendor="Google Inc.",
+            platform="Win32",
+            webgl_vendor="Intel Inc.",
+            renderer="Intel Iris OpenGL Engine",
+            fix_hairline=True,
+            )
 
-# Based on each sheet in excel file
-for i in range(len(pd.ExcelFile('shoes.xlsx').sheet_names)):
-    if i == 0:
-        stock = shoes(email, password, kurs_gbp, kurs_eur, i, driver, i)
-    else:
-        stock = shoes(email, password, kurs_gbp, kurs_eur, i, driver, 1)
-    with pd.ExcelWriter('stock.xlsx', engine='openpyxl', mode='a') as writer:
-        stock.to_excel(writer, sheet_name=sheets[i])
+    # Based on each sheet in excel file
+    for i in range(len(pd.ExcelFile('shoes.xlsx').sheet_names)):
+        if i == 0:
+            stock = shoes(email, password, kurs_gbp, kurs_eur, i, driver, i)
+        else:
+            stock = shoes(email, password, kurs_gbp, kurs_eur, i, driver, 1)
+        with pd.ExcelWriter('stock.xlsx', engine='openpyxl', mode='a') as writer:
+            stock.to_excel(writer, sheet_name=sheets[i])
 
-writer.save()
-writer.close()
+    writer.save()
+    writer.close()

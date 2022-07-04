@@ -30,4 +30,3 @@ Write SKU, size in US, price in ZL (with "." format) and "Faktura" if you want a
 
 ## stock.xslx
 Look at best prices and site. It writes two sites if the difference is ~10zl.
-# SneakersPriceChecker
