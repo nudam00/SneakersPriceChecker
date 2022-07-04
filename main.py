@@ -157,3 +157,7 @@ def main():
 
     writer.save()
     writer.close()
+
+
+if __name__ == "__main__":
+    main()
