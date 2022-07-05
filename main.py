@@ -112,7 +112,7 @@ def main():
           "Women - e.g. 9W/9.5W\n"
           "Gs - e.g. 6Y/6.5Y\n"
           '3. Put price with "." format\n'
-          '4. Put "Faktura" if you add VAT to margin\n'
+          '4. Put "Faktura" if you wish to add VAT to margin\n'
           '\n'
           'Write anything if you want to start\n')
     input()

@@ -22,57 +22,59 @@ class Stockx:
     def region(self):
         # Chooses region
         self.driver.get("https://stockx.com/")
-        time.sleep(5)
-
-        while True:
-            try:
-                WebDriverWait(self.driver, 10).until(
-                    EC.presence_of_element_located((By.XPATH, '//*[@role="dialog"]/footer/button')))
-                self.driver.find_element(
-                    "xpath", '/html/body/div[6]/div[4]/div/section/footer/button').click()
-                break
-            except Exception as e:
-                try:
-                    WebDriverWait(self.driver, 10).until(
-                        EC.presence_of_element_located((By.XPATH, '//*[@role="dialog"]/footer/button')))
-                    self.driver.find_element(
-                        "xpath", '/html/body/div[5]/div[4]/div/section/footer/button').click()
-                    break
-                except Exception:
-                    captcha()
-                captcha()
-        time.sleep(4)
-        self.logging_in()
-
-    def logging_in(self):
-        # Logs in
-
-        while True:
-            try:
-                self.driver.find_element("xpath",
-                                         '//*[@id="nav-login"]').click()
-                break
-            except Exception:
-                captcha()
-        self.driver.refresh()
-
-        print("Log in manually (PerimeterX is blocking horribly) and type manually")
+        print("Choose region and log in manually (PerimeterX is blocking horribly) and type anything...")
         input()
+        # time.sleep(5)
 
-        # Logging script
         # while True:
         #     try:
-        #         WebDriverWait(self.driver, 5).until(EC.presence_of_element_located((
-        #             By.XPATH, '//*[@id="email-login"]')))
-        #         self.driver.find_element("xpath",
-        #                                  '//*[@id="email-login"]').send_keys(self.email)
-        #         time.sleep(0.5)
-        #         self.driver.find_element("xpath",
-        #                                  '//*[@id="password-login"]').send_keys(self.password)
-        #         time.sleep(2)
+        #         WebDriverWait(self.driver, 10).until(
+        #             EC.presence_of_element_located((By.XPATH, '//*[@role="dialog"]/footer/button')))
+        #         self.driver.find_element(
+        #             "xpath", '/html/body/div[6]/div[4]/div/section/footer/button').click()
         #         break
-        #     except Exception:
+        #     except Exception as e:
+        #         try:
+        #             WebDriverWait(self.driver, 10).until(
+        #                 EC.presence_of_element_located((By.XPATH, '//*[@role="dialog"]/footer/button')))
+        #             self.driver.find_element(
+        #                 "xpath", '/html/body/div[5]/div[4]/div/section/footer/button').click()
+        #             break
+        #         except Exception:
+        #             captcha()
         #         captcha()
+        # time.sleep(4)
+
+        # # Accept cookies
+        # self.driver.find_element(
+        #     'xpath', '/html/body/div[5]/div[2]/div/div[1]/div/div[2]/div/button[3]').click()
+        # self.logging_in()
+
+    # def logging_in(self):
+    #     # Logs in
+
+    #     while True:
+    #         try:
+    #             self.driver.find_element("xpath",
+    #                                      '//*[@id="nav-login"]').click()
+    #             break
+    #         except Exception:
+    #             captcha()
+    #     self.driver.refresh()
+
+    #     while True:
+    #         try:
+    #             WebDriverWait(self.driver, 5).until(EC.presence_of_element_located((
+    #                 By.XPATH, '//*[@id="email-login"]')))
+    #             self.driver.find_element("xpath",
+    #                                      '//*[@id="email-login"]').send_keys(self.email)
+    #             time.sleep(0.5)
+    #             self.driver.find_element("xpath",
+    #                                      '//*[@id="password-login"]').send_keys(self.password)
+    #             time.sleep(2)
+    #             break
+    #         except Exception:
+    #             captcha()
 
     def product_link(self):
         # Finds product link

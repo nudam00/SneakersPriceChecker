@@ -15,7 +15,9 @@ class Restocks:
 
     def region(self):
         # Chooses country
-        self.driver.get("https://restocks.net/shop/?q={}".format(self.sku))
+        self.driver.get("https://restocks.net/en/shop?q={}".format(self.sku))
+        # Temporary, chromedriver 103 has some issues
+        time.sleep(0.5)
 
         while True:
             try:
@@ -32,10 +34,13 @@ class Restocks:
                 print('{}:Sth is wrong, check that, repair and write sth (or restart)'.format(
                     datetime.datetime.now()))
                 input()
+        # Temporary
+        time.sleep(0.5)
+        self.driver.find_element('xpath', '/html/body/div[1]/div/a').click()
 
     def product_link(self):
         # Gets product link
-        self.driver.get("https://restocks.net/shop/?q={}".format(self.sku))
+        self.driver.get("https://restocks.net/en/shop?q={}".format(self.sku))
 
         while True:
             try:
@@ -57,6 +62,7 @@ class Restocks:
             (By.XPATH, '//*[@class="select__size__list"]')))
         sizes = self.driver.find_element("xpath",
                                          '//*[@class="select__size__list"]')
+        time.sleep(0.5)
 
         for s in range(1, 25):
             try:
