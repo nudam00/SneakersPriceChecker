@@ -9,7 +9,7 @@ from selenium.webdriver.chrome.service import Service
 from selenium_stealth import stealth
 
 
-def data():
+def getData():
     # Loads data from txt
     with open('data.txt', 'r') as file:
         txt = file.readlines()
@@ -123,7 +123,7 @@ def main():
         pass
     wb = Workbook()
     wb.save(filename='stock.xlsx')
-    data = data()
+    data = getData()
     email = data[0]
     password = data[1]
     kurs_gbp = data[2]

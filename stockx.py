@@ -56,19 +56,23 @@ class Stockx:
                 captcha()
         self.driver.refresh()
 
-        while True:
-            try:
-                WebDriverWait(self.driver, 5).until(EC.presence_of_element_located((
-                    By.XPATH, '//*[@id="email-login"]')))
-                self.driver.find_element("xpath",
-                                         '//*[@id="email-login"]').send_keys(self.email)
-                time.sleep(0.5)
-                self.driver.find_element("xpath",
-                                         '//*[@id="password-login"]').send_keys(self.password)
-                time.sleep(2)
-                break
-            except Exception:
-                captcha()
+        print("Log in manually (PerimeterX is blocking horribly) and type manually")
+        input()
+
+        # Logging script
+        # while True:
+        #     try:
+        #         WebDriverWait(self.driver, 5).until(EC.presence_of_element_located((
+        #             By.XPATH, '//*[@id="email-login"]')))
+        #         self.driver.find_element("xpath",
+        #                                  '//*[@id="email-login"]').send_keys(self.email)
+        #         time.sleep(0.5)
+        #         self.driver.find_element("xpath",
+        #                                  '//*[@id="password-login"]').send_keys(self.password)
+        #         time.sleep(2)
+        #         break
+        #     except Exception:
+        #         captcha()
 
     def product_link(self):
         # Finds product link
