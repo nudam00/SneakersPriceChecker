@@ -17,7 +17,7 @@ class Restocks:
         # Chooses country
         self.driver.get("https://restocks.net/en/shop?q={}".format(self.sku))
         # Temporary, chromedriver 103 has some issues
-        time.sleep(0.5)
+        time.sleep(2)
 
         while True:
             try:
@@ -56,13 +56,14 @@ class Restocks:
         # Gets item price
         product_link = self.product_link()
 
-        time.sleep(1)
+        time.sleep(2)
         self.driver.get(product_link)
         WebDriverWait(self.driver, 15).until(EC.presence_of_element_located(
             (By.XPATH, '//*[@class="select__size__list"]')))
         sizes = self.driver.find_element("xpath",
                                          '//*[@class="select__size__list"]')
-        time.sleep(0.5)
+        # Temporary
+        time.sleep(2)
 
         for s in range(1, 25):
             try:

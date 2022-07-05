@@ -1,6 +1,6 @@
 # SneakersPriceChecker
-A program that checks sneaker prices on StockX and Restocks and writes out to an Excel file the best price after deducting the commission (which depends on the level of the account on Stockx). The price is selected based on the SKU, size in US, price in ZL and whether to add output VAT to the margin (the word "Invoice").
-Each first time the program is turned on at intervals, it ends up blocked by PerimeterX, in which case the program must be restarted and PerimeterX resolved. You also have to choose region and log in manually (PerimeterX is blocking).
+A program that checks sneaker prices on StockX and Restocks and writes out to an Excel file the best price after deducting the commission (the commision depends on the level of the account on Stockx). The price is selected based on the SKU, size in US, price in ZL and whether to add output VAT to the margin (the word "Invoice").<br /> 
+Each first time the program is turned on at intervals, it ends up blocked by PerimeterX, in which case the program must be restarted and PerimeterX resolved. You also have to choose region and log in manually (PerimeterX is blocking horribly).<br /> 
 Written in Python using Selenium.
 
 ## stockx.py
