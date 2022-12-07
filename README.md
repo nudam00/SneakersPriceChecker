@@ -4,10 +4,10 @@ Each first time the program is turned on at intervals, it ends up blocked by Per
 Written in Python using Selenium.
 
 ## stockx.py
-A file that checks the price on StockX. It performs automatic logging, chooses region based on IP and selects the size, which is placed in data.txt.
+Checks the price on StockX. It performs automatic logging, chooses region based on IP and selects the size, which is placed in data.txt.
 
 ## restocks.py
-A file that checks the price on Restocks. It selects the region of the Netherlands (so that the currency is EUR) and chooses the size, which is placed in data.txt.
+Checks the price on Restocks. It selects the region of the Netherlands (so that the currency is EUR) and chooses the size, which is placed in data.txt.
 
 ## size_converter.py
 Converts sizes to fit the page (Klekt and Goat out of date). Restocks is executed based on restocks.json.
@@ -19,7 +19,7 @@ Returns prices after commission (modify StockX if you have different account lev
 It brings the whole program together. Calls classes based on data in shoes.xlsx and writes prices to stock.xlsx.
 
 ## data.txt
-Create file data.txt with:
+Create file data.txt:
 1. Put Stockx email
 2. Put Stockx password
 3. Put GBP exchange rate with "." format
