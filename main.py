@@ -1,30 +1,19 @@
 import os
 from openpyxl import Workbook
-from selenium import webdriver
 from prices import Prices
 import pandas as pd
 from size_converter import Size
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.chrome.service import Service
-from selenium_stealth import stealth
+from add import getDriver, getExchange
 
 
-def getData():
-    # Loads data from txt
-    with open('data.txt', 'r') as file:
-        txt = file.readlines()
-    a = txt[0]
-    b = txt[1]
-    c = float(txt[2].replace("\n", ''))
-    d = float(txt[3].replace("\n", ''))
-    return [a, b, c, d]
-
-
-def shoes(emai, passw, gbp, eur, name, driv, t):
+def shoes(gbp, eur, usd, name, driv):
     # Gets all needed data from sites
-    df = pd.DataFrame(columns=['Product_name', 'SKU', 'Size', 'Stockx_payout', 'Restocks_payout', 'Stockx_price',
-                               'Restocks_price', 'Site', 'Max_ZL', 'Max_Curr'])
-    excel = pd.read_excel('shoes.xlsx', sheet_name=name)
+    df = pd.DataFrame(columns=['Product_name', 'SKU', 'Size', 'Stockx_payout',
+                               'Alias_payout', 'Stockx_price', 'Best_site', 'Best_price'])
+    excel = pd.read_excel('stock.xlsx', sheet_name=name)
+
+    new_row = {'Product_name': '', 'SKU': '', 'Size': '', 'Stockx_payout': '',
+               'Alias_payout': '', 'Stockx_price': '', 'Best_site': '', 'Best_price': ''}
 
     # Based on each row in excel sheet
     for index, row in excel.iterrows():
@@ -33,131 +22,72 @@ def shoes(emai, passw, gbp, eur, name, driv, t):
         else:
             size = str(row['size'])
         sku = row['sku']
-        value = row['price']
-        typ = row['type']
-        converter = Size(size, row['sku'])
-        sizes_list = converter.sizes()
+        dni_stockx = row['dni_stockx']
+        dni_alias = row['dni_alias']
+        price_alias = row['price_alias']
 
-        prices = Prices(driv, sizes_list, sku, emai, passw, t, gbp, eur)
-
-        # Gets stockx price
-        stockx = prices.stockx()
-        item_name = stockx[0]
-        price1 = stockx[1]
-        price_stockx = stockx[2]
-
-        # Gets restocks price
-        restocks = prices.restocks()
-        price2 = restocks[0]
-        price_restocks = restocks[1]
-
-        t += 1
-        sites = {price_stockx: 'Stockx', price_restocks: 'Restocks'}
-
-        # Calculates best site and linked price
-        if typ == 'Faktura':
-            income_stockx = price_stockx - (value / 1.23)
-            income_restocks = price_restocks - value + (value - (value / 1.23) - price_restocks + (price_restocks / 1.21
-                                                                                                   ))
-            prices = {income_stockx: price_stockx,
-                      income_restocks: price_restocks}
-            incomes = [income_stockx, income_restocks]
-            max_income = max(incomes)
-            site = str(sites[prices[max_income]])
-            if site == 'Stockx':
-                max_price = price1
-                max_price_zl = price_stockx
-            else:
-                max_price = ""
-                max_price_zl = price_restocks
+        # If same shoe as before
+        if size == new_row['Size'] and sku == new_row['SKU']:
+            pass
         else:
-            income_stockx = price_stockx - value
-            income_restocks = price_restocks - value - \
-                (price_restocks - (price_restocks / 1.21))
-            prices = {income_stockx: price_stockx,
-                      income_restocks: price_restocks}
-            incomes = [income_stockx, income_restocks]
-            max_income = max(incomes)
-            site = str(sites[prices[max_income]])
-            if site == 'Stockx':
-                max_price = price1
-                max_price_zl = price_stockx
-            else:
-                max_price = ""
-                max_price_zl = price_restocks
+            converter = Size(size, sku)
+            sizes_list = converter.sizes()
+            prices = Prices(driv, sizes_list, sku, gbp, eur,
+                            usd, dni_stockx, dni_alias, price_alias)
 
-        new_row = {'Product_name': item_name, 'SKU': sku, 'Size': str(row['size']), 'Stockx_payout': str(price_stockx),
-                   'Restocks_payout': str(price_restocks), 'Stockx_price': str(price1), 'Restocks_price': str(price2),
-                   'Site': site, 'Max_ZL': str(max_price_zl), 'Max_Curr': str(max_price)}
+            # Gets Stockx price
+            item_name, price_stockx, price_stockx_pln, driver = prices.stockx()
+            driv = driver
+
+            # Best price and site
+            price_alias_pln = prices.alias()
+            site, best_price = prices.bestPrice(
+                price_stockx_pln, price_alias_pln)
+            if site == 'Alias':
+                price_stockx = ''
+
+            new_row = {'Product_name': item_name, 'SKU': sku, 'Size': str(row['size']), 'Stockx_payout': str(
+                price_stockx_pln).replace('.', ','), 'Alias_payout': str(price_alias_pln).replace('.', ','),
+                'Stockx_price': str(price_stockx).replace('.0', ''), 'Best_site': site, 'Best_price': str(best_price).replace('.0', ',0')}
+
+        # Adding row
         df = df.append(new_row, ignore_index=True)
         print('\n'+item_name)
         print(sku)
         print(row['size'])
-        print({'Stockx: ': price_stockx, 'Restocks: ': price_restocks, })
+        print({'Stockx: ': price_stockx_pln,
+              'Alias': price_alias_pln, 'Best_site': site})
 
-    return df
-
-
-def main():
-    print('data.txt:\n'
-          '1. Put stockx email\n'
-          '2. Put stockx password\n'
-          '3. Put GBP exchange rate with "." format\n'
-          '4. Put EUR exchange rate with "." format\n'
-          '\n'
-          'shoes.xlsx:\n'
-          '1. Put sku\n'
-          "2. Put sizes into that format:\n"
-          "Men - e.g. 9/9.5\n"
-          "Women - e.g. 9W/9.5W\n"
-          "Gs - e.g. 6Y/6.5Y\n"
-          '3. Put price with "." format\n'
-          '4. Put "Faktura" if you wish to add VAT to margin\n'
-          '\n'
-          'Write anything if you want to start\n')
-    input()
-
-    try:
-        os.remove("stock.xlsx")
-    except FileNotFoundError:
-        pass
-    wb = Workbook()
-    wb.save(filename='stock.xlsx')
-    data = getData()
-    email = data[0]
-    password = data[1]
-    kurs_gbp = data[2]
-    kurs_eur = data[3]
-    sheets = pd.ExcelFile('shoes.xlsx').sheet_names
-
-    options = Options()
-    options.add_argument("start-maximized")
-    options.add_experimental_option("excludeSwitches", ["enable-automation"])
-    options.add_experimental_option('useAutomationExtension', False)
-    s = Service('C:\\BrowserDrivers\\chromedriver.exe')
-    driver = webdriver.Chrome(options=options,
-                              executable_path="C:/Users/dratw/Documents/PythonProjects/priceChecker/chromedriver.exe")
-    stealth(driver,
-            languages=["en-US", "en"],
-            vendor="Google Inc.",
-            platform="Win32",
-            webgl_vendor="Intel Inc.",
-            renderer="Intel Iris OpenGL Engine",
-            fix_hairline=True,
-            )
-
-    # Based on each sheet in excel file
-    for i in range(len(pd.ExcelFile('shoes.xlsx').sheet_names)):
-        if i == 0:
-            stock = shoes(email, password, kurs_gbp, kurs_eur, i, driver, i)
-        else:
-            stock = shoes(email, password, kurs_gbp, kurs_eur, i, driver, 1)
-        with pd.ExcelWriter('stock.xlsx', engine='openpyxl', mode='a') as writer:
-            stock.to_excel(writer, sheet_name=sheets[i])
-
-    writer.save()
-    writer.close()
+    return [df, driver]
 
 
 if __name__ == "__main__":
-    main()
+    print('stock.xlsx:\n'
+          '1. Write sku\n'
+          "2. Write sizes into that format:\n"
+          "Men - e.g. 9/9.5\n"
+          "Women - e.g. 9W/9.5W\n"
+          "Gs - e.g. 6Y/6.5Y\n"
+          "3. Write 'NIE' if you want to get price-1 on StockX\n"
+          "4. Write 'NIE' if you want to get price-1 on Alias\n"
+          "5. Write price on Alias in USD\n"
+          '\n'
+          'Write anything if you would like to start\n')
+    input()
+
+    eur, gbp, usd = getExchange()
+    driver = getDriver()
+    try:
+        os.remove("prices.xlsx")
+    except FileNotFoundError:
+        pass
+    wb = Workbook()
+    wb.save(filename='prices.xlsx')
+    sheets = pd.ExcelFile('stock.xlsx').sheet_names
+
+    # Based on each sheet in excel file
+    for i in range(len(pd.ExcelFile('stock.xlsx').sheet_names)):
+        stock, driver2 = shoes(gbp, eur, usd, i, driver)
+        driver = driver2
+        with pd.ExcelWriter('prices.xlsx', engine='openpyxl', mode='a') as writer:
+            stock.to_excel(writer, sheet_name=sheets[i])

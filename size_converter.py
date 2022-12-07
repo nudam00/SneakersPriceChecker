@@ -10,20 +10,6 @@ class Size:
     def stockx(self):
         return self.size
 
-    def klekt(self):
-        if "W" in self.size:
-            return "US{}".format(self.size[:-1])
-        if "Y" in self.size:
-            return self.size
-        return "US{}".format(self.size)
-
-    def goat(self):
-        if "W" in self.size:
-            return self.size
-        if "Y" in self.size:
-            return self.size
-        return "{}M".format(self.size)
-
     def restocks(self):
         json_file = open("restocks.json")
         sizes = json.load(json_file)
@@ -64,10 +50,10 @@ class Size:
                 return sizes['c'][self.size]
             return sizes['M'][self.size]
 
-        if "BB" in self.sku:
+        if "BB" in self.sku or "GSB" in self.sku:
             return sizes['New_balance'][self.size]
 
         return sizes['Adidas'][self.size]
 
     def sizes(self):
-        return [self.stockx(), self.klekt(), self.restocks(), self.goat()]
+        return [self.stockx(), self.restocks()]
