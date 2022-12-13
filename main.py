@@ -15,7 +15,7 @@ def shoes(gbp, eur, usd, name, driv):
     new_row = {'Product_name': '', 'SKU': '', 'Size': '', 'Stockx_payout': '',
                'Alias_payout': '', 'Stockx_price': '', 'Best_site': '', 'Best_price': ''}
 
-    # Based on each row in excel sheet
+    # Based on each row in excel sheet (stock.xlsx)
     for index, row in excel.iterrows():
         if '.0' in str(row['size']):
             size = str(row['size']).replace('.0', '')
@@ -26,7 +26,7 @@ def shoes(gbp, eur, usd, name, driv):
         dni_alias = row['dni_alias']
         price_alias = row['price_alias']
 
-        # If same shoe as before
+        # If same shoe as before then get saved data from earlier iteration
         if size == new_row['Size'] and sku == new_row['SKU']:
             pass
         else:
@@ -43,6 +43,7 @@ def shoes(gbp, eur, usd, name, driv):
             price_alias_pln = prices.alias()
             site, best_price = prices.bestPrice(
                 price_stockx_pln, price_alias_pln)
+            # It could be deleted, created just for my need
             if site == 'Alias':
                 price_stockx = ''
 
@@ -50,7 +51,7 @@ def shoes(gbp, eur, usd, name, driv):
                 price_stockx_pln).replace('.', ','), 'Alias_payout': str(price_alias_pln).replace('.', ','),
                 'Stockx_price': str(price_stockx).replace('.0', ''), 'Best_site': site, 'Best_price': str(best_price).replace('.0', ',0')}
 
-        # Adding row
+        # Adds row
         df = df.append(new_row, ignore_index=True)
         print('\n'+item_name)
         print(sku)

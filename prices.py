@@ -1,8 +1,8 @@
 from stockx import Stockx
-# Gets prices from each site
 
 
 class Prices:
+    # Gets prices from each site
 
     def __init__(self, driver, sizes_list, sku, gbp, eur, usd, dni_stockx, dni_alias, price_alias):
         self.driver = driver
@@ -15,14 +15,17 @@ class Prices:
         self.dni_stockx = dni_stockx
         self.dni_alias = dni_alias
         self.price_alias = price_alias
+        self.stockx_fee = 0.085  # change it if you have different fee
 
     def stockx(self):
+        # Gets price from StockX to PLN
         stockx = Stockx(self.driver,  self.size_stockx, self.sku)
         try:
             item_name, price, driver = stockx.item_info()
             if self.dni_stockx == 'NIE' or self.dni_stockx == 'MASAKRA':
                 price = price-1
-            price_pln = (price-(price*0.03)-(price*0.085))*self.gbp
+            price_pln = (price-(price*0.03)-(price*self.stockx_fee))*self.gbp
+            # Rounding down to tens
             a = price_pln % 10
             price_pln = price_pln-a
             return [item_name, price, price_pln, driver]
@@ -31,15 +34,18 @@ class Prices:
             return ['None', 'None', 'None']
 
     def alias(self):
+        # Gets price from Alias to PLN
         if self.dni_alias == 'NIE' or self.dni_alias == 'MASAKRA':
             self.price_alias = self.price_alias-1
         price_pln = (self.price_alias -
                      (self.price_alias*0.095)-12)*self.usd*0.971
+        # Rounding down to tens
         a = price_pln % 10
         price_pln = price_pln-a
         return price_pln
 
     def bestPrice(self, p_stockx, p_alias):
+        # Returns best price and site
         if self.dni_stockx == 'MASAKRA' and self.dni_alias == 'MASAKRA':
             return ['Stockx/Alias', min(p_stockx, p_alias)]
         elif p_stockx > p_alias:

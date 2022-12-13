@@ -1,8 +1,8 @@
 import json
-# Converts sizes to the right format
 
 
 class Size:
+    # Converts sizes to the right format
     def __init__(self, size, sku):
         self.size = str(size)
         self.sku = sku

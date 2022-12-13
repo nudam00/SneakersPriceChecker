@@ -7,6 +7,8 @@ from datetime import datetime
 
 
 def getDriver():
+    # Opening driver with needed options
+    # Choose region, save cookies and log in manually (due to PerimeterX)
     options = webdriver.ChromeOptions()
     options.add_argument("start-maximized")
     options.add_experimental_option("excludeSwitches", ["enable-automation"])
@@ -28,7 +30,7 @@ def getDriver():
 
 
 def getExchange():
-    # Gets exchange rate from NBP
+    # Get exchange rates (eur/pln, gbp/pln, usd/pln) from NBP site
     page = requests.get('https://www.nbp.pl/home.aspx?f=/kursy/kursya.html')
     soup = BeautifulSoup(page.content, "html.parser")
     dom = etree.HTML(str(soup))
@@ -42,5 +44,6 @@ def getExchange():
 
 
 def captcha():
+    # Runs if PerimeterX is detected
     print("{}: Solve captcha".format(datetime.now()))
     return getDriver()

@@ -24,12 +24,14 @@ class Stockx:
                     By.XPATH, '//*[@class="css-pnc6ci"]')
                 return href.find_element(By.CSS_SELECTOR, 'a').get_attribute('href')
             except (TimeoutException, NoSuchElementException):
+                # When PerimeterX is detected
                 self.driver.close()
                 self.driver = captcha()
 
     def item_info(self):
         # Gets product name, sku and price
         url = self.product_link().replace('https://stockx.com/', '')
+        # listing product link where the price is as displayed in the application
         self.driver.get('https://stockx.com/sell/'+url+'?size='+self.size)
 
         while True:
@@ -70,6 +72,7 @@ class Stockx:
                             self.driver.find_element(
                                 By.XPATH, '//*[@class="chakra-button css-vzfjg0"]').click()
                         except TimeoutException:
+                            # When PerimeterX is detected
                             self.driver.close()
                             self.driver = captcha()
                             return self.item_info()
