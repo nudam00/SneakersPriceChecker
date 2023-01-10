@@ -2,7 +2,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from add import captcha
-from selenium.common.exceptions import TimeoutException, NoSuchElementException, StaleElementReferenceException
+from selenium.common.exceptions import StaleElementReferenceException
 import time
 
 
@@ -38,13 +38,19 @@ class Stockx:
     def choose_size(self):
         # Clicks size
         self.product_link()
-        for i in range(1, 42):
-            size = self.driver.find_element(
-                By.XPATH, '//*[@id="main-container"]/div[1]/div[2]/div[3]/div/button[{}]/div'.format(i)).text
-            if size == self.size:
-                self.driver.find_element(
-                    By.XPATH, '//*[@id="main-container"]/div[1]/div[2]/div[3]/div/button[{}]'.format(i)).click()
+        while True:
+            try:
+                for i in range(1, 42):
+                    size = self.driver.find_element(
+                        By.XPATH, '//*[@id="main-container"]/div[1]/div[2]/div[3]/div/button[{}]/div'.format(i)).text
+                    if size == self.size:
+                        self.driver.find_element(
+                            By.XPATH, '//*[@id="main-container"]/div[1]/div[2]/div[3]/div/button[{}]'.format(i)).click()
+                        break
                 break
+            except StaleElementReferenceException:
+                print("Click pop ups...")
+                input()
 
     def item_info(self):
         # Gets product name, sku and price

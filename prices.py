@@ -47,16 +47,16 @@ class Prices:
     def bestPrice(self, p_stockx, p_alias):
         # Returns best price and site
         if self.dni_stockx == 'MASAKRA' and self.dni_alias == 'MASAKRA':
-            return ['Stockx/Alias', min(p_stockx, p_alias)]
+            return ['StockX/Alias', min(p_stockx, p_alias)]
         elif p_stockx > p_alias:
             if self.dni_stockx == 'MASAKRA':
-                return ['Stockx/Alias', p_alias]
+                return ['StockX/Alias', p_alias]
             else:
-                return ['Stockx', p_stockx]
+                return ['StockX', p_stockx]
         elif p_alias > p_stockx:
             if self.dni_alias == 'MASAKRA':
-                return ['Stockx/Alias', p_stockx]
+                return ['StockX/Alias', p_stockx]
             else:
                 return ['Alias', p_alias]
         elif p_alias == p_stockx:
-            return ['Stockx/Alias', p_alias]
+            return ['StockX/Alias', p_alias]
