@@ -24,7 +24,7 @@ class Prices:
             item_name, price, driver = stockx.item_info()
             if self.dni_stockx == 'NIE' or self.dni_stockx == 'MASAKRA':
                 price = price-1
-            price_pln = (price-(price*0.03)-(price*self.stockx_fee))*self.gbp
+            price_pln = (price-(price*0.03)-(price*self.stockx_fee))*self.usd
             # Rounding down to tens
             a = price_pln % 10
             price_pln = price_pln-a

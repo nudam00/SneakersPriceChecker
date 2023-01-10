@@ -23,7 +23,7 @@ def getDriver():
             renderer="Intel Iris OpenGL Engine",
             fix_hairline=True,
             )
-    driver.get("https://stockx.com/")
+    driver.get("https://pro.stockx.com/login")
     print("Choose region and log in manually, type anything...")
     input()
     return driver
