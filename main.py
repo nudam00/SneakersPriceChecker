@@ -8,12 +8,12 @@ from add import getDriver, getExchange
 
 def shoes(gbp, eur, usd, name, driv):
     # Gets all needed data from sites
-    df = pd.DataFrame(columns=['Product_name', 'SKU', 'Size', 'Stockx_payout',
-                               'Alias_payout', 'Stockx_price', 'Best_site', 'Best_price'])
+    df = pd.DataFrame(columns=['Product_name', 'SKU', 'Size', 'StockX_payout',
+                               'Alias_payout', 'StockX_price', 'Best_site', 'Best_price'])
     excel = pd.read_excel('stock.xlsx', sheet_name=name)
 
-    new_row = {'Product_name': '', 'SKU': '', 'Size': '', 'Stockx_payout': '',
-               'Alias_payout': '', 'Stockx_price': '', 'Best_site': '', 'Best_price': ''}
+    new_row = {'Product_name': '', 'SKU': '', 'Size': '', 'StockX_payout': '',
+               'Alias_payout': '', 'StockX_price': '', 'Best_site': '', 'Best_price': ''}
 
     # Based on each row in excel sheet (stock.xlsx)
     for index, row in excel.iterrows():
@@ -47,16 +47,16 @@ def shoes(gbp, eur, usd, name, driv):
             if site == 'Alias':
                 price_stockx = ''
 
-            new_row = {'Product_name': item_name, 'SKU': sku, 'Size': str(row['size']), 'Stockx_payout': str(
+            new_row = {'Product_name': item_name, 'SKU': sku, 'Size': str(row['size']), 'StockX_payout': str(
                 price_stockx_pln).replace('.', ','), 'Alias_payout': str(price_alias_pln).replace('.', ','),
-                'Stockx_price': str(price_stockx).replace('.0', ''), 'Best_site': site, 'Best_price': str(best_price).replace('.0', ',0')}
+                'StockX_price': str(price_stockx).replace('.0', ''), 'Best_site': site, 'Best_price': str(best_price).replace('.0', ',0')}
 
         # Adds row
         df = df.append(new_row, ignore_index=True)
         print('\n'+item_name)
         print(sku)
         print(row['size'])
-        print({'Stockx: ': price_stockx_pln,
+        print({'StockX: ': price_stockx_pln,
               'Alias': price_alias_pln, 'Best_site': site})
 
     return [df, driver]
@@ -73,7 +73,7 @@ if __name__ == "__main__":
           "4. Write 'NIE' if you want to get price-1 on Alias\n"
           "5. Write price on Alias in USD\n"
           '\n'
-          'Write anything if you would like to start\n')
+          'Write anything when you would like to start\n')
     input()
 
     eur, gbp, usd = getExchange()

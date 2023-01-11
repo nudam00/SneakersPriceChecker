@@ -49,7 +49,7 @@ class Stockx:
                         break
                 break
             except StaleElementReferenceException:
-                print("Click pop ups...")
+                print("Click pop ups, then type anything...")
                 input()
 
     def item_info(self):

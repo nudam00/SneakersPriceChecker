@@ -24,7 +24,7 @@ def getDriver():
             fix_hairline=True,
             )
     driver.get("https://pro.stockx.com/login")
-    print("Choose region and log in manually, type anything...")
+    print("Log in manually, then type anything...")
     input()
     return driver
 
