@@ -13,7 +13,7 @@ class Stockx:
         self.size = size
         self.sku = sku
 
-    def product_link(self):
+    def __product_link(self):
         # Gets listing creation link
         while True:
             try:
@@ -35,9 +35,9 @@ class Stockx:
                 self.driver.close()
                 self.driver = captcha()
 
-    def choose_size(self):
+    def __choose_size(self):
         # Clicks size
-        self.product_link()
+        self.__product_link()
         while True:
             try:
                 for i in range(1, 42):
@@ -54,7 +54,7 @@ class Stockx:
 
     def item_info(self):
         # Gets product name, sku and price
-        self.choose_size()
+        self.__choose_size()
 
         # Lowest ask
         WebDriverWait(self.driver, 2).until(EC.presence_of_element_located(

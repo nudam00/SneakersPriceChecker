@@ -3,10 +3,10 @@ from openpyxl import Workbook
 from prices import Prices
 import pandas as pd
 from size_converter import Size
-from add import getDriver, getExchange
+from add import getDriver, getExchange, getScraper
 
 
-def shoes(gbp, eur, usd, name, driv):
+def shoes(gbp, eur, usd, name, driv, token, scraper):
     # Gets all needed data from sites
     df = pd.DataFrame(columns=['Product_name', 'SKU', 'Size', 'StockX_payout',
                                'Alias_payout', 'StockX_price', 'Best_site', 'Best_price'])
@@ -24,7 +24,6 @@ def shoes(gbp, eur, usd, name, driv):
         sku = row['sku']
         dni_stockx = row['dni_stockx']
         dni_alias = row['dni_alias']
-        price_alias = row['price_alias']
 
         # If same shoe as before then get saved data from earlier iteration
         if size == new_row['Size'] and sku == new_row['SKU']:
@@ -33,14 +32,16 @@ def shoes(gbp, eur, usd, name, driv):
             converter = Size(size, sku)
             sizes_list = converter.sizes()
             prices = Prices(driv, sizes_list, sku, gbp, eur,
-                            usd, dni_stockx, dni_alias, price_alias)
+                            usd, dni_stockx, dni_alias, token, scraper)
 
             # Gets Stockx price
             item_name, price_stockx, price_stockx_pln, driver = prices.stockx()
             driv = driver
 
-            # Best price and site
+            # Gets Alias price
+
             price_alias_pln = prices.alias()
+            # Best price and site
             site, best_price = prices.bestPrice(
                 price_stockx_pln, price_alias_pln)
             # It could be deleted, created just for my need
@@ -71,13 +72,16 @@ if __name__ == "__main__":
           "Gs - e.g. 6Y/6.5Y\n"
           "3. Write 'NIE' if you want to get price-1 on StockX\n"
           "4. Write 'NIE' if you want to get price-1 on Alias\n"
-          "5. Write price on Alias in USD\n"
           '\n'
           'Write anything when you would like to start\n')
     input()
 
+    with open('login_alias.txt') as file:
+        lines = [line.rstrip() for line in file]
+    token, scraper = getScraper(lines[0], lines[1])
     eur, gbp, usd = getExchange()
     driver = getDriver()
+
     try:
         os.remove("prices.xlsx")
     except FileNotFoundError:
@@ -88,7 +92,7 @@ if __name__ == "__main__":
 
     # Based on each sheet in excel file
     for i in range(len(pd.ExcelFile('stock.xlsx').sheet_names)):
-        stock, driver2 = shoes(gbp, eur, usd, i, driver)
+        stock, driver2 = shoes(gbp, eur, usd, i, driver, token, scraper)
         driver = driver2
         with pd.ExcelWriter('prices.xlsx', engine='openpyxl', mode='a') as writer:
             stock.to_excel(writer, sheet_name=sheets[i])

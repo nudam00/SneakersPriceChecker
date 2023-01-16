@@ -10,6 +10,14 @@ class Size:
     def stockx(self):
         return self.size
 
+    def alias(self):
+        if 'W' in self.size:
+            return self.size.replace('W', '')
+        elif 'Y' in self.size:
+            return self.size.replace('Y', '')
+        else:
+            return self.size
+
     def restocks(self):
         json_file = open("restocks.json")
         sizes = json.load(json_file)
@@ -56,4 +64,4 @@ class Size:
         return sizes['Adidas'][self.size]
 
     def sizes(self):
-        return [self.stockx(), self.restocks()]
+        return [self.stockx(), self.alias(), self.restocks()]

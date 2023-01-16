@@ -4,6 +4,9 @@ from lxml import etree
 from selenium import webdriver
 from selenium_stealth import stealth
 from datetime import datetime
+import json
+import cloudscraper
+import time
 
 
 def getDriver():
@@ -47,3 +50,25 @@ def captcha():
     # Runs if PerimeterX is detected
     print("{}: Solve captcha".format(datetime.now()))
     return getDriver()
+
+
+def getScraper(username, password):
+    # Gets scraper and alias token
+    data = {"grantType": "password",
+            "username": username, "password": password}
+    url = 'https://sell-api.goat.com/api/v1/unstable/users/login'
+    headers = {'Accept': 'application/json',
+               'Accept-Encoding': 'gzip, deflate, br',
+               'Accept-Language': 'pl-PL,pl;q=0.9',
+               'User-Agent': 'alias/1.20.1 (iPhone; iOS 16.2; Scale/3.00) Locale/en',
+               'x-emb-id': '2389040D96C04834A761C65276AC5564',
+               'x-emb-st': str(int(time.time() * 1000)),
+               'X-PX-AUTHORIZATION': '3',
+               'X-PX-ORIGINAL-TOKEN': '3:87ec12c5b4c34832b42e88735f4da9949538cc013cb7ac2c48d8504371518d81:tT/X5LIfW0h1Ymfegj0v4hZx9Oj13sLWXGbw2+PCtg96IiaUfvn0SG5e/GH+QJPIphQY4u6NziXV+nQypGVLhQ==:1000:f9OqYPvRS2ATdeQYm+cskkymJJlSpyDHB++F566kPebKaJwCf2Y4nxse8wunIYMPytrJCPEOm6dZ8rD19SE/JpJH5cWswIgF7i2DQvMEyP+hVIDae1eUTuZViSvGiPlf2hjvkc8kAUbVDx4I72mqHCx6jzH1+F/2qsnWjdxL5lu7s/b+sdA035/eOeXBihKOcOTT08GYQ1EAkgqiFTMQPg==',
+               'Connection': 'keep-alive',
+               'Host': 'sell-api.goat.com',
+               }
+    scraper = cloudscraper.create_scraper()
+    r = scraper.post(data=json.dumps(
+        data), headers=headers, url=url)
+    return [json.loads(r.text)["auth_token"]['access_token'], scraper]

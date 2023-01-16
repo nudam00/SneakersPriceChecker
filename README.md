@@ -1,5 +1,5 @@
 # SneakersPriceChecker
-Program which checks sneaker prices on StockX in USD and writes out to an Excel file the best price in **PLN** after deducting the commission (the commision depends on the level of the account on Stockx). The price on StockX is detected based on the SKU and size in US. Price from StockX is compared to price on Alias (Excel file, just write price in USD) and it writes out final price. In stock.xlsx there are two columns named "dni_stockx" and "dni_alias" - write:
+Program which checks sneaker prices on StockX in USD and writes out to an Excel file the best price in **PLN** after deducting the commission (the commision depends on the level of the account on Stockx). The price on StockX is detected based on the SKU and size in US. Price from StockX is compared to price on Alias and it writes out final price. In stock.xlsx there are two columns named "dni_stockx" and "dni_alias" - write:
 1. "NIE" if you would like to get price-1
 2. "TAK" if you would like to get price
 3. "MASAKRA" if you would like to write both sites in "Best_site", even if the second site has lower price (example: "MASAKRA" in "dni_alias" - a pair of sneakers sells on Alias very rarely so I would like to list it on StockX as well even if the price is lower, if higher then "Alias" won't be written in "Best_site").
@@ -9,6 +9,9 @@ Written in Python using Selenium.
 
 ## stockx.py
 Checks the price on StockX. It takes the same price as displayed in the application.
+
+## alias.py
+Checks the price on Alias. It takes the same price as displayed in the application.
 
 ## restocks.py
 Outdated.
@@ -31,7 +34,6 @@ Write in "dni_stockx" and "dni_alias":
 1. "NIE" if you would like to get price-1.
 2. "TAK" if you would like to get price.
 3. "MASAKRA" if you would like to write both sites in "Best_site", even if the second site has lower price (example: "MASAKRA" in "dni_alias" - a pair of sneakers sells on Alias very rarely so I would like to list it on StockX as well even if the price is lower, if higher then "Alias" won't be written in "Best_site"). Price will be considered as price-1.
-Write price in USD from Alias app.
 
 ## price.xslx
 Look at:

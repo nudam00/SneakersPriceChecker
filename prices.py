@@ -1,20 +1,23 @@
 from stockx import Stockx
+from alias import Alias
 
 
 class Prices:
     # Gets prices from each site
 
-    def __init__(self, driver, sizes_list, sku, gbp, eur, usd, dni_stockx, dni_alias, price_alias):
+    def __init__(self, driver, sizes_list, sku, gbp, eur, usd, dni_stockx, dni_alias, token, scraper):
         self.driver = driver
         self.size_stockx = sizes_list[0]
-        self.size_restocks = sizes_list[1]
+        self.size_restocks = sizes_list[2]
+        self.size_alias = sizes_list[1]
         self.sku = sku
         self.gbp = gbp
         self.eur = eur
         self.usd = usd
         self.dni_stockx = dni_stockx
         self.dni_alias = dni_alias
-        self.price_alias = price_alias
+        self.token = token
+        self.scraper = scraper
         self.stockx_fee = 0.085  # change it if you have different fee
 
     def stockx(self):
@@ -35,14 +38,19 @@ class Prices:
 
     def alias(self):
         # Gets price from Alias to PLN
-        if self.dni_alias == 'NIE' or self.dni_alias == 'MASAKRA':
-            self.price_alias = self.price_alias-1
-        price_pln = (self.price_alias -
-                     (self.price_alias*0.095)-12)*self.usd*0.971
-        # Rounding down to tens
-        a = price_pln % 10
-        price_pln = price_pln-a
-        return price_pln
+        alias = Alias(self.sku, self.size_alias, self.token, self.scraper)
+        try:
+            price = int(alias.getPrice())
+            if self.dni_alias == 'NIE' or self.dni_alias == 'MASAKRA':
+                price = price-1
+            price_pln = (price - (price*0.095)-12)*self.usd*0.971
+            # Rounding down to tens
+            a = price_pln % 10
+            price_pln = price_pln-a
+            return price_pln
+        except TypeError as e:
+            print(e)
+            return ['None']
 
     def bestPrice(self, p_stockx, p_alias):
         # Returns best price and site
