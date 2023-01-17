@@ -9,7 +9,7 @@ import cloudscraper
 import time
 
 
-def getDriver():
+def get_driver():
     # Opening driver with needed options
     # Choose region, save cookies and log in manually (due to PerimeterX)
     options = webdriver.ChromeOptions()
@@ -32,28 +32,26 @@ def getDriver():
     return driver
 
 
-def getExchange():
-    # Get exchange rates (eur/pln, gbp/pln, usd/pln) from NBP site
+def get_exchange():
+    # Get exchange rates (EUR/PLN, USD/PLN) from NBP site
     page = requests.get('https://www.nbp.pl/home.aspx?f=/kursy/kursya.html')
-    soup = BeautifulSoup(page.content, "html.parser")
+    soup = BeautifulSoup(page.content, features="lxml")
     dom = etree.HTML(str(soup))
     eur = float(
         dom.xpath('//tr[8]/td[3][@class="right"]')[0].text.replace(',', '.'))
-    gbp = float(
-        dom.xpath('//tr[11]/td[3][@class="right"]')[0].text.replace(',', '.'))
     usd = float(
         dom.xpath('//tr[2]/td[3][@class="right"]')[0].text.replace(',', '.'))
-    return [eur, gbp, usd]
+    return [eur, usd]
 
 
 def captcha():
     # Runs if PerimeterX is detected
     print("{}: Solve captcha".format(datetime.now()))
-    return getDriver()
+    return get_driver()
 
 
-def getScraper(username, password):
-    # Gets scraper and alias token
+def get_scraper(username, password):
+    # Gets scraper, alias token, region on restocks
     data = {"grantType": "password",
             "username": username, "password": password}
     url = 'https://sell-api.goat.com/api/v1/unstable/users/login'
@@ -69,6 +67,39 @@ def getScraper(username, password):
                'Host': 'sell-api.goat.com',
                }
     scraper = cloudscraper.create_scraper()
-    r = scraper.post(data=json.dumps(
-        data), headers=headers, url=url)
-    return [json.loads(r.text)["auth_token"]['access_token'], scraper]
+    while True:
+        try:
+            restocks_region(scraper)
+            r = scraper.post(data=json.dumps(
+                data), headers=headers, url=url)
+            return [json.loads(r.text)["auth_token"]['access_token'], scraper]
+        except:
+            continue
+
+
+def restocks_region(scraper):
+    soup = BeautifulSoup(scraper.get(
+        'https://restocks.net/en').text, features="lxml")
+    token = soup.find('meta', {'name': 'csrf-token'})['content']
+    data = {'_token': token, 'country': 'PL',
+            'language': 'en', 'valuta': 'EUR'}
+    headers = {
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+        'Accept-Encoding': 'gzip, deflate, br',
+        'Accept-Language': 'pl,en-US;q=0.7,en;q=0.3',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:108.0) Gecko/20100101 Firefox/108.0',
+        'Referer': 'https://restocks.net/en',
+        'Origin': 'https://restocks.net',
+        'Sec-Fetch-Dest': 'document',
+        'Sec-Fetch-Mode': 'navigate',
+        'Sec-Fetch-Site': 'same-origin',
+        'Sec-Fetch-User': '?1',
+        'Upgrade-Insecure-Requests': '1',
+        'Connection': 'keep-alive',
+        'Host': 'restocks.net',
+        'Content-Type': 'application/x-www-form-urlencoded'
+    }
+    url = 'https://restocks.net/localization'
+    scraper.post(data=data, headers=headers,
+                 url=url)
+    return True

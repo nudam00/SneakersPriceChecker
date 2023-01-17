@@ -1,43 +1,43 @@
 # SneakersPriceChecker
-Program which checks sneaker prices on StockX in USD and writes out to an Excel file the best price in **PLN** after deducting the commission (the commision depends on the level of the account on Stockx). The price on StockX is detected based on the SKU and size in US. Price from StockX is compared to price on Alias and it writes out final price. In stock.xlsx there are two columns named "dni_stockx" and "dni_alias" - write:
-1. "NIE" if you would like to get price-1
-2. "TAK" if you would like to get price
-3. "MASAKRA" if you would like to write both sites in "Best_site", even if the second site has lower price (example: "MASAKRA" in "dni_alias" - a pair of sneakers sells on Alias very rarely so I would like to list it on StockX as well even if the price is lower, if higher then "Alias" won't be written in "Best_site").
+Program which checks sneaker prices based on **sku** and **size** and writes out in PLN to the excel file. Sites which are scrapped:
+1. StockX - prices must be in USD. 
+2. AliasPrice - prices must be in USD.
+3. Restocks - prices must be in EUR.
 <br /> 
 StockX ends up blocked by PerimeterX quite often, so the program will be restarted automatically and PerimeterX needs to be resolved. You also have to choose region and log in manually again.<br /> 
-Written in Python using Selenium.
+Written in Python using Selenium and requests.
 
-## stockx.py
-Checks the price on StockX. It takes the same price as displayed in the application.
+## Converters
+1. prices.py - returns prices in PLN after commission.
+2. restocks.json - size converter to restocks size.
+3. size_converter.py - converts all sizes to fit the page.
+<br />
 
-## alias.py
-Checks the price on Alias. It takes the same price as displayed in the application.
+## Input
+1. settings.json - write your credentials on Alias and StockX fee.
 
-## restocks.py
-Outdated.
+## Output
+### prices.xslx
+Look at:
+1. StockX and Alias payouts in PLN (rounded down to tens).
+3. Best site/s.
+4. Best price rounded down to tens.
+5. Best additional sites (which are not that popular like StockX or Alias).
+<br />
 
-## size_converter.py
-Converts sizes to fit the page. Restocks is executed based on restocks.json.
+### stock.xlsx
+1. Write SKU.
+2. Write size in US.
+<br />
 
-## prices.py
-Returns prices after commission (modify self.stockx_fee if you have different account level).
+## Sites
+1. alias.py - checks the price on Alias.
+2. restocks.py - check the price on Restocks.
+3. stockx.py - checks the price on StockX. 
+<br />
 
 ## add.py
 A few additional functions.
 
 ## main.py
 It brings the whole program together. Calls classes based on data in stock.xlsx and writes prices to prices.xlsx.
-
-## stock.xlsx
-Write SKU, size in US.
-Write in "dni_stockx" and "dni_alias":
-1. "NIE" if you would like to get price-1.
-2. "TAK" if you would like to get price.
-3. "MASAKRA" if you would like to write both sites in "Best_site", even if the second site has lower price (example: "MASAKRA" in "dni_alias" - a pair of sneakers sells on Alias very rarely so I would like to list it on StockX as well even if the price is lower, if higher then "Alias" won't be written in "Best_site"). Price will be considered as price-1.
-
-## price.xslx
-Look at:
-1. StockX and Alias payouts in PLN (rounded down to tens).
-2. StockX price in GBP (only if best site is StockX, created for my need).
-3. Best site/s.
-4. Best price rounded down to tens.

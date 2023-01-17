@@ -15,11 +15,13 @@ class Size:
             return self.size.replace('W', '')
         elif 'Y' in self.size:
             return self.size.replace('Y', '')
+        elif 'C' in self.size:
+            return self.size.replace('C', '')
         else:
             return self.size
 
     def restocks(self):
-        json_file = open("restocks.json")
+        json_file = open("converters/restocks.json")
         sizes = json.load(json_file)
 
         for size in sizes['Y']:
@@ -31,8 +33,8 @@ class Size:
         for size in sizes['M']:
             sizes['M'][size] = sizes['M'][size].replace("Â˝", '½')
 
-        for size in sizes['c']:
-            sizes['c'][size] = sizes['c'][size].replace("Â˝", '½')
+        for size in sizes['C']:
+            sizes['C'][size] = sizes['C'][size].replace("Â˝", '½')
 
         for size in sizes['New_balance']:
             sizes['New_balance'][size] = sizes['New_balance'][size].replace(
@@ -44,7 +46,7 @@ class Size:
             if t == 2:
                 sizes['Adidas'][size] = sizes['Adidas'][size].replace(
                     "â…”", '⅔')
-            if t == 3:
+            elif t == 3:
                 sizes['Adidas'][size] = sizes['Adidas'][size].replace(
                     "â…“", '⅓')
                 t = 0
@@ -52,11 +54,15 @@ class Size:
         if "-" in self.sku:
             if "Y" in self.size:
                 return sizes['Y'][self.size]
-            if "W" in self.size:
-                return sizes['W'][self.size]
-            if "c" in self.size:
-                return sizes['c'][self.size]
-            return sizes['M'][self.size]
+            elif "W" in self.size:
+                if len(self.sku) == 11:
+                    return sizes['UGG'][self.size]
+                else:
+                    return sizes['W'][self.size]
+            elif "C" in self.size:
+                return sizes['C'][self.size]
+            else:
+                return sizes['M'][self.size]
 
         if "BB" in self.sku or "GSB" in self.sku:
             return sizes['New_balance'][self.size]

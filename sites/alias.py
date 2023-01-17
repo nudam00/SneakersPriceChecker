@@ -23,7 +23,7 @@ class Alias:
         self.sku = sku
         self.size = size
 
-    def __getProduct(self):
+    def __get_product(self):
         # Gets product id
         url = "https://2fwotdvm2o-dsn.algolia.net/1/indexes/product_variants_v2?analyticsTags=%5B%22platform%3Aios%22%2C%22channel%3Aalias%22%5D&distinct=1&facetingAfterDistinct=1&facets=%5B%22product_category%22%5D&filters=%28product_category%3Aclothing%20OR%20product_category%3Ashoes%20OR%20product_category%3Aaccessories%20OR%20product_category%3Abags%29&page=0&query={}".format(
             self.sku)
@@ -40,11 +40,18 @@ class Alias:
             'Host': '2fwotdvm2o-dsn.algolia.net'
         }
         r = self.scraper.get(headers=headers, url=url)
-        return str([x['slug'] for x in json.loads(r.text)['hits']][0])
+        try:
+            return str([x['slug'] for x in json.loads(r.text)['hits']][0])
+        except Exception as e:
+            print(e)
+            return False
 
-    def getPrice(self):
+    def get_price(self):
         # Gets price
-        data = {"variant": {"id": self.__getProduct(), "size": self.size, "productCondition": '1',
+        product = self.__get_product()
+        if product == False:
+            return 0
+        data = {"variant": {"id": product, "size": self.size, "productCondition": '1',
                             "packagingCondition": '1', "consigned": 'false', "regionId": "2"}}
         r = self.scraper.post(data=json.dumps(data), headers=self.headers,
                               url=self.url)

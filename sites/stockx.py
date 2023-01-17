@@ -57,11 +57,14 @@ class Stockx:
         self.__choose_size()
 
         # Lowest ask
-        WebDriverWait(self.driver, 2).until(EC.presence_of_element_located(
-            (By.XPATH, '//*[@id="main-container"]/div[1]/div[2]/div[5]/div[2]/div[3]/div/span/div/div/input')))
-        p = self.driver.find_element(
-            By.XPATH, '//*[@id="main-container"]/div[1]/div[2]/div[5]/div[2]/div[3]/div/span/div/div/input').get_attribute("value")
-        price = float(p)+1
+        try:
+            WebDriverWait(self.driver, 2).until(EC.presence_of_element_located(
+                (By.XPATH, '//*[@id="main-container"]/div[1]/div[2]/div[5]/div[2]/div[3]/div/span/div/div/input')))
+            p = self.driver.find_element(
+                By.XPATH, '//*[@id="main-container"]/div[1]/div[2]/div[5]/div[2]/div[3]/div/span/div/div/input').get_attribute("value")
+            price = float(p)+1
+        except:
+            price = 0
 
         # Item name
         item_name1 = self.driver.find_element(
