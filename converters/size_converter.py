@@ -69,5 +69,17 @@ class Size:
 
         return sizes['Adidas'][self.size]
 
+    def klekt(self):
+        if 'W' in self.size:
+            return 'US'+self.size.replace('W', '')
+        elif 'Y' in self.size:
+            return self.size
+        elif 'C' in self.size:
+            return self.size
+        elif 'GSB' in self.sku:
+            return self.size.replace('Y', '')
+        else:
+            return 'US'+self.size
+
     def sizes(self):
-        return [self.stockx(), self.alias(), self.restocks()]
+        return [self.stockx(), self.alias(), self.restocks(), self.klekt()]

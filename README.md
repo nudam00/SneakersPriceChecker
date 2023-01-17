@@ -14,7 +14,8 @@ Written in Python using Selenium and requests.
 <br />
 
 ## Input
-1. settings.json - write your credentials on Alias and StockX fee.
+1. settings.json - write your credentials on Alias and StockX fee
+```{"alias_username": "x", "alias_password": "x", "stockx_fee": 0.x}```
 
 ## Output
 ### prices.xslx

@@ -1,6 +1,7 @@
 from sites.stockx import Stockx
 from sites.alias import Alias
 from sites.restocks import Restocks
+from sites.klekt import Klekt
 
 
 class Prices:
@@ -12,6 +13,7 @@ class Prices:
         self.size_stockx = sizes_list[0]
         self.size_alias = sizes_list[1]
         self.size_restocks = sizes_list[2]
+        self.size_klekt = sizes_list[3]
         self.sku = sku
         self.eur = eur
         self.usd = usd
@@ -58,7 +60,20 @@ class Prices:
         except (TypeError, ValueError):
             return 0
 
-    def bestPrice(self, p_stockx, p_alias, p_restocks):
+    def klekt(self):
+        # Gets price from KLEKT to PLN
+        klekt = Klekt(self.sku, self.size_klekt, self.scraper)
+        try:
+            price = int(klekt.get_price())
+            price_pln = (price/1.17-5)/1.19*self.eur
+            # Rounding down to tens
+            a = price_pln % 10
+            price_pln = price_pln-a
+            return price_pln
+        except (TypeError, ValueError):
+            return 0
+
+    def bestPrice(self, p_stockx, p_alias, p_restocks, p_klekt):
         # Returns best price and site
         additional_sites = ''
         best_price = 0
@@ -73,4 +88,6 @@ class Prices:
             best_price = p_alias
         if p_restocks > best_price:
             additional_sites += 'Restocks/'
+        elif p_klekt > best_price:
+            additional_sites += 'Klekt/'
         return [sites, additional_sites, best_price]
