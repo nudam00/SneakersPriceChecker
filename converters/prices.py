@@ -2,23 +2,26 @@ from sites.stockx import Stockx
 from sites.alias import Alias
 from sites.restocks import Restocks
 from sites.klekt import Klekt
+from sites.wethenew import Wethenew
 
 
 class Prices:
     # Gets prices from each site
 
-    def __init__(self, driver, sizes_list, sku, eur, usd, alias_token, scraper, stockx_fee):
+    def __init__(self, driver, sizes_list, sku, eur, usd, alias_token, scraper, stockx_fee, page):
         self.driver = driver
         self.scraper = scraper
         self.size_stockx = sizes_list[0]
         self.size_alias = sizes_list[1]
         self.size_restocks = sizes_list[2]
         self.size_klekt = sizes_list[3]
+        self.size_wethenew = sizes_list[4]
         self.sku = sku
         self.eur = eur
         self.usd = usd
         self.alias_token = alias_token
         self.stockx_fee = stockx_fee
+        self.page = page
 
     def stockx(self):
         # Gets price from StockX to PLN
@@ -65,7 +68,7 @@ class Prices:
         klekt = Klekt(self.sku, self.size_klekt, self.scraper)
         try:
             price = int(klekt.get_price())
-            price_pln = (price/1.17-5)/1.19*self.eur
+            price_pln = (price/1.17-5)/1.21*self.eur
             # Rounding down to tens
             a = price_pln % 10
             price_pln = price_pln-a
@@ -73,7 +76,20 @@ class Prices:
         except (TypeError, ValueError):
             return 0
 
-    def bestPrice(self, p_stockx, p_alias, p_restocks, p_klekt):
+    def wethenew(self):
+        # Gets price from WETHENEW to PLN
+        wethenew = Wethenew(self.sku, self.size_wethenew, self.page)
+        try:
+            price = int(wethenew.get_price())
+            price_pln = (price/1.2)*self.eur
+            # Rounding down to tens
+            a = price_pln % 10
+            price_pln = price_pln-a
+            return price_pln
+        except (TypeError, ValueError):
+            return 0
+
+    def bestPrice(self, p_stockx, p_alias, p_restocks, p_klekt, p_wethenew):
         # Returns best price and site
         additional_sites = ''
         best_price = 0
@@ -88,6 +104,8 @@ class Prices:
             best_price = p_alias
         if p_restocks > best_price:
             additional_sites += 'Restocks/'
-        elif p_klekt > best_price:
+        if p_klekt > best_price:
             additional_sites += 'Klekt/'
+        if p_wethenew > best_price:
+            additional_sites += 'Wethenew/'
         return [sites, additional_sites, best_price]

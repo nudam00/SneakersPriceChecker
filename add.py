@@ -7,6 +7,32 @@ from datetime import datetime
 import json
 import cloudscraper
 import time
+import time
+
+
+def get_playwright(email, passw, page):
+    page.goto('https://sell.wethenew.com/login', timeout=0)
+    page.wait_for_load_state('load')
+    time.sleep(3)
+    try:
+        page.locator(
+            'xpath=//button[@id="didomi-notice-agree-button"]').first.click(force=True, click_count=2)
+        time.sleep(2)
+    except:
+        pass
+    try:
+        page.locator(
+            'xpath=//input[@type="email"]').type(email)
+        time.sleep(1)
+        page.locator(
+            'xpath=//input[@type="password"]').type(passw)
+        time.sleep(1)
+        page.locator('xpath=//button[@type="submit"]').click()
+        time.sleep(2)
+    except:
+        pass
+    print("Logged into wethenew account")
+    return True
 
 
 def get_driver():
@@ -72,6 +98,7 @@ def get_scraper(username, password):
             restocks_region(scraper)
             r = scraper.post(data=json.dumps(
                 data), headers=headers, url=url)
+            print("Logged into alias account and Restocks region selected")
             return [json.loads(r.text)["auth_token"]['access_token'], scraper]
         except:
             continue

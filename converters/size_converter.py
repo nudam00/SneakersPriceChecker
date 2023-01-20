@@ -81,5 +81,27 @@ class Size:
         else:
             return 'US'+self.size
 
+    def wethenew(self):
+        json_file = open("converters/wethenew.json")
+        sizes = json.load(json_file)
+
+        if "-" in self.sku:
+            if "Y" in self.size:
+                return sizes['Y'][self.size]
+            elif "W" in self.size:
+                if len(self.sku) == 11:
+                    return sizes['UGG'][self.size]
+                else:
+                    return sizes['W'][self.size]
+            elif "C" in self.size:
+                return sizes['C'][self.size]
+            else:
+                return sizes['M'][self.size]
+
+        if "BB" in self.sku or "GSB" in self.sku:
+            return sizes['New_balance'][self.size]
+
+        return sizes['Adidas'][self.size]
+
     def sizes(self):
-        return [self.stockx(), self.alias(), self.restocks(), self.klekt()]
+        return [self.stockx(), self.alias(), self.restocks(), self.klekt(), self.wethenew()]

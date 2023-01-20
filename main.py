@@ -3,8 +3,10 @@ from openpyxl import Workbook
 from converters.prices import Prices
 import pandas as pd
 from converters.size_converter import Size
-from add import get_driver, get_exchange, get_scraper
+from add import get_driver, get_exchange, get_scraper, get_playwright
 import json
+from playwright.sync_api import sync_playwright
+from playwright_stealth import stealth_sync
 
 
 def get_settings(setting):
@@ -14,7 +16,7 @@ def get_settings(setting):
     return settings[setting]
 
 
-def shoes(eur, usd, name, driv, token, scraper, stockx_fee):
+def shoes(eur, usd, name, driv, token, scraper, stockx_fee, p):
     # Gets all needed data from sites
     df = pd.DataFrame(columns=['Product_name', 'SKU', 'Size', 'StockX_payout',
                       'Alias_payout', 'Best_site', 'Best_price', 'Additional_sites'])
@@ -38,21 +40,23 @@ def shoes(eur, usd, name, driv, token, scraper, stockx_fee):
             converter = Size(size, sku)
             sizes_list = converter.sizes()
             prices = Prices(driver=driv, sizes_list=sizes_list, sku=sku, eur=eur,
-                            usd=usd, alias_token=token, scraper=scraper, stockx_fee=stockx_fee)
+                            usd=usd, alias_token=token, scraper=scraper, stockx_fee=stockx_fee, page=p)
 
             # Gets Stockx price
             item_name, price_stockx_pln, driver = prices.stockx()
             driv = driver
             # Gets Alias price
             price_alias_pln = prices.alias()
-            # Gets Restocks pirce
+            # Gets Restocks price
             price_restocks_pln = prices.restocks()
-            # Gets Klekt pirce
+            # Gets Klekt price
             price_klekt_pln = prices.klekt()
+            # Gets Wethenew price
+            price_wethenew_pln = prices.wethenew()
 
             # Best price and site
             site, additional_sites, best_price = prices.bestPrice(
-                price_stockx_pln, price_alias_pln, price_restocks_pln, price_klekt_pln)
+                price_stockx_pln, price_alias_pln, price_restocks_pln, price_klekt_pln, price_wethenew_pln)
 
             new_row = {'Product_name': item_name, 'SKU': sku, 'Size': str(row['size']), 'StockX_payout': str(price_stockx_pln).replace('.', ','), 'Alias_payout': str(
                 price_alias_pln).replace('.', ','), 'Best_site': site, 'Best_price': str(best_price).replace('.0', ',0'), 'Additional_sites': additional_sites}
@@ -63,7 +67,7 @@ def shoes(eur, usd, name, driv, token, scraper, stockx_fee):
         print(sku)
         print(row['size'])
         print({'StockX: ': price_stockx_pln, 'Alias': price_alias_pln, 'Restocks': price_restocks_pln,
-              'Klekt': price_klekt_pln, 'Best_site': site, 'Additional_sites': additional_sites})
+               'Klekt': price_klekt_pln, 'Wethenew': price_wethenew_pln, 'Best_site': site, 'Additional_sites': additional_sites})
 
     return [df, driver]
 
@@ -82,7 +86,7 @@ if __name__ == "__main__":
 
     # Preparing
     alias_token, scraper = get_scraper(get_settings(
-        'alias_username'), get_settings('alias_password'))
+        'username'), get_settings('alias_password'))
     eur, usd = get_exchange()
     driver = get_driver()
     stockx_fee = get_settings('stockx_fee')
@@ -94,9 +98,16 @@ if __name__ == "__main__":
     wb.save(filename='output/prices.xlsx')
     sheets = pd.ExcelFile('input/stock.xlsx').sheet_names
 
-    # Based on each sheet in excel file
-    for i in range(len(pd.ExcelFile('input/stock.xlsx').sheet_names)):
-        stock, driver = shoes(eur, usd, i, driver,
-                              alias_token, scraper, stockx_fee)
-        with pd.ExcelWriter('output/prices.xlsx', engine='openpyxl', mode='a') as writer:
-            stock.to_excel(writer, sheet_name=sheets[i])
+    with sync_playwright() as p:
+        browser = p.firefox.launch(headless=True, slow_mo=300)
+        page = browser.new_page()
+        stealth_sync(page)
+        get_playwright(get_settings('username'),
+                       get_settings('wethenew_password'), page)
+
+        # Based on each sheet in excel file
+        for i in range(len(pd.ExcelFile('input/stock.xlsx').sheet_names)):
+            stock, driver = shoes(eur, usd, i, driver,
+                                  alias_token, scraper, stockx_fee, page)
+            with pd.ExcelWriter('output/prices.xlsx', engine='openpyxl', mode='a') as writer:
+                stock.to_excel(writer, sheet_name=sheets[i])

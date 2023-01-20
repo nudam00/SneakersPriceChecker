@@ -3,6 +3,7 @@ Program which checks sneaker prices based on **sku** and **size** and writes out
 1. StockX - prices must be in USD. 
 2. AliasPrice - prices must be in USD.
 3. Restocks - prices must be in EUR.
+4. Klekt - prices must be in EUR.
 <br /> 
 StockX ends up blocked by PerimeterX quite often, so the program will be restarted automatically and PerimeterX needs to be resolved. You also have to choose region and log in manually again.<br /> 
 Written in Python using Selenium and requests.
@@ -34,7 +35,8 @@ Look at:
 ## Sites
 1. alias.py - checks the price on Alias.
 2. restocks.py - check the price on Restocks.
-3. stockx.py - checks the price on StockX. 
+3. stockx.py - checks the price on StockX.
+4. klekt.py - check the price on Klekt.
 <br />
 
 ## add.py
