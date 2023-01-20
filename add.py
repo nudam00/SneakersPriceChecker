@@ -11,6 +11,7 @@ import time
 
 
 def get_playwright(email, passw, page):
+    # Logs into wethenew account
     page.goto('https://sell.wethenew.com/login', timeout=0)
     page.wait_for_load_state('load')
     time.sleep(3)

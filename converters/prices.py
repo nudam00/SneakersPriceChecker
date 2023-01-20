@@ -64,7 +64,7 @@ class Prices:
             return 0
 
     def klekt(self):
-        # Gets price from KLEKT to PLN
+        # Gets price from Klekt to PLN
         klekt = Klekt(self.sku, self.size_klekt, self.scraper)
         try:
             price = int(klekt.get_price())
