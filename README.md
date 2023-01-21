@@ -51,8 +51,7 @@ A few additional functions.
 It brings the whole program together. Calls classes based on data in stock.xlsx and writes prices to prices.xlsx.
 
 ## INCOMING
-1. Hypeboost
-2. Sneakit
-3. Best sizes based on price (will compare to StockX and Alias)
-4. StockX rewrite
-5. Whole program rewrite
+1. Sneakit
+2. Best sizes based on price (will compare to StockX and Alias)
+3. StockX rewrite
+4. Whole program rewrite
