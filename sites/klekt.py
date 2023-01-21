@@ -12,7 +12,7 @@ class Klekt:
     def __get_product(self):
         # Gets product page
         soup = BeautifulSoup(self.scraper.get(
-            'https://www.klekt.com/brands?search={}'.format(self.sku)).text)
+            'https://www.klekt.com/brands?search={}'.format(self.sku)).text, features="lxml")
         try:
             return soup.find('a', {'class': 'pod-link'})['href']
         except:
@@ -22,7 +22,7 @@ class Klekt:
         # Gets price
         try:
             soup = BeautifulSoup(self.scraper.get(
-                'https://www.klekt.com/'+self.__get_product()).text)
+                'https://www.klekt.com/'+self.__get_product()).text, features="lxml")
         except:
             return 0
         dom = etree.HTML(str(soup))

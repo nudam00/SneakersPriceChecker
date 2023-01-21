@@ -53,10 +53,12 @@ def shoes(eur, usd, name, driv, token, scraper, stockx_fee, p):
             price_klekt_pln = prices.klekt()
             # Gets Wethenew price
             price_wethenew_pln = prices.wethenew()
+            # Gets Hypeboost price
+            price_hypeboost_pln = prices.hypeboost()
 
             # Best price and site
             site, additional_sites, best_price = prices.bestPrice(
-                price_stockx_pln, price_alias_pln, price_restocks_pln, price_klekt_pln, price_wethenew_pln)
+                price_stockx_pln, price_alias_pln, price_restocks_pln, price_klekt_pln, price_wethenew_pln, price_hypeboost_pln)
 
             new_row = {'Product_name': item_name, 'SKU': sku, 'Size': str(row['size']), 'StockX_payout': str(price_stockx_pln).replace('.', ','), 'Alias_payout': str(
                 price_alias_pln).replace('.', ','), 'Best_site': site, 'Best_price': str(best_price).replace('.0', ',0'), 'Additional_sites': additional_sites}
@@ -66,8 +68,8 @@ def shoes(eur, usd, name, driv, token, scraper, stockx_fee, p):
         print('\n'+item_name)
         print(sku)
         print(row['size'])
-        print({'StockX: ': price_stockx_pln, 'Alias': price_alias_pln, 'Restocks': price_restocks_pln,
-               'Klekt': price_klekt_pln, 'Wethenew': price_wethenew_pln, 'Best_site': site, 'Additional_sites': additional_sites})
+        print({'StockX: ': price_stockx_pln, 'Alias': price_alias_pln, 'Restocks': price_restocks_pln, 'Klekt': price_klekt_pln,
+              'Wethenew': price_wethenew_pln, 'Hypeboost': price_hypeboost_pln, 'Best_site': site, 'Additional_sites': additional_sites})
 
     return [df, driver]
 

@@ -32,8 +32,8 @@ class Restocks:
         r = self.scraper.get(url=url, headers=self.headers)
         try:
             return [x['slug'] for x in json.loads(r.text)['data']][0]
-        except Exception as e:
-            print(e)
+        except IndexError:
+            print('Restocks: No product found')
             return False
 
     def get_price(self):

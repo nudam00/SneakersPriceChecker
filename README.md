@@ -5,20 +5,26 @@ Program which checks sneaker prices based on **sku** and **size** and writes out
 3. Restocks - prices must be in EUR.
 4. Klekt - prices must be in EUR.
 5. WETHENEW - prices must be in EUR.
+6. Hypeboost - prices must be in EUR.
 <br /> 
 StockX ends up blocked by PerimeterX quite often, so the program will be restarted automatically and PerimeterX needs to be resolved. You also have to choose region and log in manually again.<br /> 
 Written in Python using Selenium, requests and Playwright.
 
 ## Converters
 1. prices.py - returns prices in PLN after commission.
-2. restocks.json - size converter to restocks size.
+2. restocks_hypeboost.json - size converter to restocks and hypeboost format size.
 3. size_converter.py - converts all sizes to fit the page.
 4. wethenew.json - size converter to wethenew size.
 <br />
 
 ## Input
-1. settings.json - write your credentials on Alias and StockX fee
+### settings.json - write your credentials on Alias and StockX fee
 ```{"alias_username": "x", "alias_password": "x", "stockx_fee": 0.x, "wethenew_password": "x"}```
+
+### stock.xlsx
+1. Write SKU.
+2. Write size in US.
+<br />
 
 ## Output
 ### prices.xslx
@@ -29,17 +35,13 @@ Look at:
 5. Best additional sites (which are not that popular like StockX or Alias).
 <br />
 
-### stock.xlsx
-1. Write SKU.
-2. Write size in US.
-<br />
-
 ## Sites
 1. alias.py - checks the price on Alias.
 2. restocks.py - check the price on Restocks.
 3. stockx.py - checks the price on StockX.
 4. klekt.py - check the price on Klekt.
 5. wethenew.py - check the price on WETHENEW.
+6. hypeboost.py - check the price on Hypeboost.
 <br />
 
 ## add.py

@@ -42,8 +42,8 @@ class Alias:
         r = self.scraper.get(headers=headers, url=url)
         try:
             return str([x['slug'] for x in json.loads(r.text)['hits']][0])
-        except Exception as e:
-            print(e)
+        except IndexError:
+            print('Alias: No product found')
             return False
 
     def get_price(self):

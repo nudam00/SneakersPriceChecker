@@ -41,7 +41,8 @@ def get_driver():
     # Choose region, save cookies and log in manually (due to PerimeterX)
     options = webdriver.ChromeOptions()
     options.add_argument("start-maximized")
-    options.add_experimental_option("excludeSwitches", ["enable-automation"])
+    options.add_experimental_option(
+        "excludeSwitches", ["enable-automation", 'enable-logging'])
     options.add_experimental_option('useAutomationExtension', False)
     driver = webdriver.Chrome(
         chrome_options=options, executable_path='C:/Users/dratw/Documents/codes/priceChecker/chromedriver.exe')

@@ -17,14 +17,14 @@ class Wethenew():
             self.page.locator(
                 'xpath=//input[@type="search"]').type(self.sku)
             self.page.wait_for_load_state('load')
-            time.sleep(2)
+            time.sleep(3)
             self.page.locator(
                 'xpath=//*[@id="__next"]/div/div[1]/div/div/div[3]/div/div/div/div/div/div[2]/button').click()
             self.page.wait_for_load_state('load')
             time.sleep(1)
             return True
-        except Exception as e:
-            print(e)
+        except IndexError:
+            print("WETHENEW: No product found")
             return False
 
     def get_price(self):

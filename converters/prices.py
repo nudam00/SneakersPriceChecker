@@ -3,6 +3,7 @@ from sites.alias import Alias
 from sites.restocks import Restocks
 from sites.klekt import Klekt
 from sites.wethenew import Wethenew
+from sites.hypeboost import Hypeboost
 
 
 class Prices:
@@ -13,7 +14,7 @@ class Prices:
         self.scraper = scraper
         self.size_stockx = sizes_list[0]
         self.size_alias = sizes_list[1]
-        self.size_restocks = sizes_list[2]
+        self.size_restocks_hypeboost = sizes_list[2]
         self.size_klekt = sizes_list[3]
         self.size_wethenew = sizes_list[4]
         self.sku = sku
@@ -52,7 +53,8 @@ class Prices:
 
     def restocks(self):
         # Gets price from Restocks to PLN
-        restocks = Restocks(self.size_restocks, self.sku, self.scraper)
+        restocks = Restocks(self.size_restocks_hypeboost,
+                            self.sku, self.scraper)
         try:
             price = int(restocks.get_price())
             price_pln = (price*0.9-20)/1.21*self.eur
@@ -89,7 +91,21 @@ class Prices:
         except (TypeError, ValueError):
             return 0
 
-    def bestPrice(self, p_stockx, p_alias, p_restocks, p_klekt, p_wethenew):
+    def hypeboost(self):
+        # Gets price from Restocks to PLN
+        hypeboost = Hypeboost(self.size_restocks_hypeboost,
+                              self.sku, self.scraper)
+        try:
+            price = int(hypeboost.get_price())
+            price_pln = (price*0.93-10)/1.21*self.eur
+            # Rounding down to tens
+            a = price_pln % 10
+            price_pln = price_pln-a
+            return price_pln
+        except (TypeError, ValueError):
+            return 0
+
+    def bestPrice(self, p_stockx, p_alias, p_restocks, p_klekt, p_wethenew, p_hypeboost):
         # Returns best price and site
         additional_sites = ''
         best_price = 0
@@ -108,4 +124,6 @@ class Prices:
             additional_sites += 'Klekt/'
         if p_wethenew > best_price:
             additional_sites += 'Wethenew/'
+        if p_hypeboost > best_price:
+            additional_sites += 'Hypeboost/'
         return [sites, additional_sites, best_price]

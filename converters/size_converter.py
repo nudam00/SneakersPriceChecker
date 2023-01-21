@@ -20,8 +20,8 @@ class Size:
         else:
             return self.size
 
-    def restocks(self):
-        json_file = open("converters/restocks.json")
+    def restocks_hypeboost(self):
+        json_file = open("converters/restocks_hypeboost.json")
         sizes = json.load(json_file)
 
         for size in sizes['Y']:
@@ -104,4 +104,4 @@ class Size:
         return sizes['Adidas'][self.size]
 
     def sizes(self):
-        return [self.stockx(), self.alias(), self.restocks(), self.klekt(), self.wethenew()]
+        return [self.stockx(), self.alias(), self.restocks_hypeboost(), self.klekt(), self.wethenew()]
