@@ -23,21 +23,20 @@ class Wethenew():
             self.page.wait_for_load_state('load')
             time.sleep(1)
             return True
-        except IndexError:
-            print("WETHENEW: No product found")
+        except:
             return False
 
     def get_price(self):
         # Gets price
-        bool = False
-        while bool == False:
-            bool = self.__get_product()
 
-        locator = self.page.locator('xpath=//li[@role="button"]').all()
-        for loc in locator:
-            if loc.inner_text() == self.size:
-                loc.click()
+        # Sometimes there are more than one product page
+        self.__get_product()
+
         try:
+            locator = self.page.locator('xpath=//li[@role="button"]').all()
+            for loc in locator:
+                if loc.inner_text() == self.size:
+                    loc.click()
             price = self.page.locator(
                 'xpath=//span[@style="font-weight: 500;"]').inner_text()
             return price.replace('€', '')

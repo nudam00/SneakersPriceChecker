@@ -4,6 +4,7 @@ from sites.restocks import Restocks
 from sites.klekt import Klekt
 from sites.wethenew import Wethenew
 from sites.hypeboost import Hypeboost
+from sites.sneakit import Sneakit
 
 
 class Prices:
@@ -17,6 +18,7 @@ class Prices:
         self.size_restocks_hypeboost = sizes_list[2]
         self.size_klekt = sizes_list[3]
         self.size_wethenew = sizes_list[4]
+        self.size_sneakit = sizes_list[5]
         self.sku = sku
         self.eur = eur
         self.usd = usd
@@ -105,8 +107,22 @@ class Prices:
         except (TypeError, ValueError):
             return 0
 
-    def bestPrice(self, p_stockx, p_alias, p_restocks, p_klekt, p_wethenew, p_hypeboost):
+    def sneakit(self):
+        # Gets price from Sneakit to PLN
+        sneakit = Sneakit(self.size_sneakit, self.sku, self.scraper)
+        try:
+            price = int(sneakit.get_price())
+            price_pln = (price-25)/1.2*self.eur
+            # Rounding down to tens
+            a = price_pln % 10
+            price_pln = price_pln-a
+            return price_pln
+        except (TypeError, ValueError):
+            return 0
+
+    def bestPrice(self, purchase, p_stockx, p_alias, p_restocks, p_klekt, p_wethenew, p_hypeboost, p_sneakit):
         # Returns best price and site
+        margin = 0.15
         additional_sites = ''
         best_price = 0
         if p_stockx > p_alias:
@@ -118,12 +134,14 @@ class Prices:
         else:
             sites = 'StockX/Alias'
             best_price = p_alias
-        if p_restocks > best_price:
+        if p_restocks > best_price and (p_restocks-purchase)/purchase > margin:
             additional_sites += 'Restocks/'
-        if p_klekt > best_price:
+        if p_klekt > best_price and (p_klekt-purchase)/purchase > margin:
             additional_sites += 'Klekt/'
-        if p_wethenew > best_price:
+        if p_wethenew > best_price and (p_wethenew-purchase)/purchase > margin:
             additional_sites += 'Wethenew/'
-        if p_hypeboost > best_price:
+        if p_hypeboost > best_price and (p_hypeboost-purchase)/purchase > margin:
             additional_sites += 'Hypeboost/'
+        if p_sneakit > best_price and (p_sneakit-purchase)/purchase > margin:
+            additional_sites += 'Sneakit/'
         return [sites, additional_sites, best_price]

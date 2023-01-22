@@ -103,5 +103,38 @@ class Size:
 
         return sizes['Adidas'][self.size]
 
+    def sneakit(self):
+        json_file = open("converters/sneakit.json")
+        sizes = json.load(json_file)
+
+        t = 0
+        for size in sizes['Adidas']:
+            t += 1
+            if t == 2:
+                sizes['Adidas'][size] = sizes['Adidas'][size].replace(
+                    "â…”", '⅔')
+            elif t == 3:
+                sizes['Adidas'][size] = sizes['Adidas'][size].replace(
+                    "â…“", '⅓')
+                t = 0
+
+        if "-" in self.sku:
+            if "Y" in self.size:
+                return sizes['Y'][self.size]
+            elif "W" in self.size:
+                if len(self.sku) == 11:
+                    return sizes['UGG'][self.size]
+                else:
+                    return sizes['W'][self.size]
+            elif "C" in self.size:
+                return sizes['C'][self.size]
+            else:
+                return sizes['M'][self.size]
+
+        if "BB" in self.sku or "GSB" in self.sku:
+            return sizes['New_balance'][self.size]
+
+        return sizes['Adidas'][self.size]
+
     def sizes(self):
-        return [self.stockx(), self.alias(), self.restocks_hypeboost(), self.klekt(), self.wethenew()]
+        return [self.stockx(), self.alias(), self.restocks_hypeboost(), self.klekt(), self.wethenew(), self.sneakit()]
