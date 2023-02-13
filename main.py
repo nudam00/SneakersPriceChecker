@@ -68,7 +68,7 @@ if __name__ == "__main__":
                     stockx_price = stockx_data[1]
 
                     # Best price
-                    site, best_price = best_site(alias_price, stockx_price)
+                    site, best_price = best_site(stockx_price, alias_price)
 
                     new_row = {'Product_name': product_name, 'SKU': sku, 'Size': str(row['size']), 'StockX_payout': str(stockx_price).replace(
                         '.', ','), 'Alias_payout': str(alias_price).replace('.', ','), 'Best_site': site, 'Best_price': str(best_price).replace('.0', ',0')}
