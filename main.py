@@ -1,100 +1,28 @@
-import os
-from openpyxl import Workbook
-from converters.prices import Prices
-import pandas as pd
-from converters.size_converter import Size
-from add import get_driver, get_exchange, get_scraper, get_playwright
-import json
+from sites.alias import Alias
+from sites.stockx import StockX
+from add import get_settings, best_site
 from playwright.sync_api import sync_playwright
 from playwright_stealth import stealth_sync
-
-
-def get_settings(setting):
-    # Gets settings from settings.json
-    settings_file = open("input/settings.json")
-    settings = json.load(settings_file)
-    return settings[setting]
-
-
-def shoes(eur, usd, name, driv, token, scraper, stockx_fee, p):
-    # Gets all needed data from sites
-    df = pd.DataFrame(columns=['Product_name', 'SKU', 'Size', 'StockX_payout',
-                      'Alias_payout', 'Best_site', 'Best_price', 'Additional_sites'])
-    excel = pd.read_excel('input/stock.xlsx', sheet_name=name)
-
-    new_row = {'Product_name': '', 'SKU': '', 'Size': '', 'StockX_payout': '',
-               'Alias_payout': '', 'Best_site': '', 'Best_price': '', 'Additional_sites': ''}
-
-    # Based on each row in excel sheet (stock.xlsx)
-    for index, row in excel.iterrows():
-        if '.0' in str(row['size']):
-            size = str(row['size']).replace('.0', '')
-        else:
-            size = str(row['size'])
-        sku = row['sku']
-        purchase = int(str(row['price']).replace(',', '.'))
-
-        # If same shoe as before then get saved data from earlier iteration
-        if size == new_row['Size'] and sku == new_row['SKU']:
-            pass
-        else:
-            converter = Size(size, sku)
-            sizes_list = converter.sizes()
-            prices = Prices(driver=driv, sizes_list=sizes_list, sku=sku, eur=eur,
-                            usd=usd, alias_token=token, scraper=scraper, stockx_fee=stockx_fee, page=p)
-
-            # Gets Stockx price
-            item_name, price_stockx_pln, driver = prices.stockx()
-            driv = driver
-            # Gets Alias price
-            price_alias_pln = prices.alias()
-            # Gets Restocks price
-            price_restocks_pln = prices.restocks()
-            # Gets Klekt price
-            price_klekt_pln = prices.klekt()
-            # Gets Wethenew price
-            price_wethenew_pln = prices.wethenew()
-            # Gets Hypeboost price
-            price_hypeboost_pln = prices.hypeboost()
-            # Gets Sneakit price
-            price_sneakit_pln = prices.sneakit()
-
-            # Best price and site
-            site, additional_sites, best_price = prices.bestPrice(
-                purchase, price_stockx_pln, price_alias_pln, price_restocks_pln, price_klekt_pln, price_wethenew_pln, price_hypeboost_pln, price_sneakit_pln)
-
-            new_row = {'Product_name': item_name, 'SKU': sku, 'Size': str(row['size']), 'StockX_payout': str(price_stockx_pln).replace('.', ','), 'Alias_payout': str(
-                price_alias_pln).replace('.', ','), 'Best_site': site, 'Best_price': str(best_price).replace('.0', ',0'), 'Additional_sites': additional_sites}
-
-        # Adds row
-        df = df.append(new_row, ignore_index=True)
-        print('\n'+item_name)
-        print(sku)
-        print(row['size'])
-        print({'StockX: ': price_stockx_pln, 'Alias': price_alias_pln, 'Restocks': price_restocks_pln, 'Klekt': price_klekt_pln, 'Wethenew': price_wethenew_pln,
-              'Hypeboost': price_hypeboost_pln, 'Sneakit': price_sneakit_pln, 'Best_site': site, 'Additional_sites': additional_sites})
-
-    return [df, driver]
+import os
+from openpyxl import Workbook
+import pandas as pd
+from converters.size_converter import Size
 
 
 if __name__ == "__main__":
     print('stock.xlsx:\n'
           '1. Write sku\n'
-          "2. Write sizes into that format:\n"
+          "2. Write sizes into format:\n"
           "Men - e.g. 9/9.5\n"
           "Women - e.g. 9W/9.5W\n"
           "Gs - e.g. 6Y/6.5Y\n"
           'Td - e.g. 2C\n'
+          "3. Write net price in PLN\n"
           '\n'
           'Write anything when you would like to start\n')
     input()
 
-    # Preparing
-    alias_token, scraper = get_scraper(get_settings(
-        'username'), get_settings('alias_password'))
-    eur, usd = get_exchange()
-    driver = get_driver()
-    stockx_fee = get_settings('stockx_fee')
+    # Preparing files
     try:
         os.remove("output/prices.xlsx")
     except FileNotFoundError:
@@ -104,15 +32,53 @@ if __name__ == "__main__":
     sheets = pd.ExcelFile('input/stock.xlsx').sheet_names
 
     with sync_playwright() as p:
-        browser = p.firefox.launch(headless=True, slow_mo=300)
+        browser = p.firefox.launch(headless=False, slow_mo=300)
         page = browser.new_page()
         stealth_sync(page)
-        get_playwright(get_settings('username'),
-                       get_settings('wethenew_password'), page)
 
-        # Based on each sheet in excel file
+        # Logging in
+        alias = Alias(get_settings('username'), get_settings('alias_password'))
+        stockx = StockX(get_settings('username'), get_settings(
+            'stockx_password'), page, get_settings('stockx_fee'))
+
         for i in range(len(pd.ExcelFile('input/stock.xlsx').sheet_names)):
-            stock, driver = shoes(eur, usd, i, driver,
-                                  alias_token, scraper, stockx_fee, page)
+            # Creaeting dataframe
+            df = pd.DataFrame(columns=['Product_name', 'SKU', 'Size', 'StockX_payout',
+                                       'Alias_payout', 'Best_site', 'Best_price', 'Additional_sites'])
+            excel = pd.read_excel('input/stock.xlsx', sheet_name=i)
+            new_row = {'Product_name': '', 'SKU': '', 'Size': '', 'StockX_payout': '',
+                       'Alias_payout': '', 'Best_site': '', 'Best_price': ''}
+
+            for index, row in excel.iterrows():
+                if '.0' in str(row['size']):
+                    size = str(row['size']).replace('.0', '')
+                else:
+                    size = str(row['size'])
+                sku = row['sku']
+
+                # If same shoe as before then get saved data from earlier iteration
+                if size == new_row['Size'] and sku == new_row['SKU']:
+                    pass
+                else:
+                    sizes_converter = Size(size, sku)
+                    alias_price = alias.get_price(sku, sizes_converter.alias())
+                    stockx_data = stockx.get_price(
+                        sku, sizes_converter.stockx())
+                    product_name = stockx_data[0]
+                    stockx_price = stockx_data[1]
+
+                    # Best price
+                    site, best_price = best_site(alias_price, stockx_price)
+
+                    new_row = {'Product_name': product_name, 'SKU': sku, 'Size': str(row['size']), 'StockX_payout': str(stockx_price).replace(
+                        '.', ','), 'Alias_payout': str(alias_price).replace('.', ','), 'Best_site': site, 'Best_price': str(best_price).replace('.0', ',0')}
+
+                df = df.append(new_row, ignore_index=True)
+                print('\n'+product_name)
+                print(sku)
+                print(size)
+                print({'StockX: ': stockx_price,
+                      'Alias': alias_price, 'Best_site': site})
+
             with pd.ExcelWriter('output/prices.xlsx', engine='openpyxl', mode='a') as writer:
-                stock.to_excel(writer, sheet_name=sheets[i])
+                df.to_excel(writer, sheet_name=sheets[i])
