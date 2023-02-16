@@ -16,7 +16,7 @@ size_converter.py - converts all sizes to fit the page.
 
 ### settings.json - write your credentials on Alias and StockX fee
 
-`{"alias_username": "x", "alias_password": "x", "stockx_password": "x", "stockx_fee": 0.x}`
+`{"alias_username": "x", "alias_password": "x", "stockx_password": "x", "stockx_fee": 0.x, "usd_rate": x}`
 
 ### stock.xlsx
 

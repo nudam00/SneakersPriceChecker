@@ -76,9 +76,9 @@ class Alias:
                               url=self.url+'/analytics/variants/availability')
 
         try:
-            return self.__get_PLN(int(json.loads(r.text)['lowest_price_cents'][:-2]))
+            return self.__get_PLN(int(json.loads(r.text)['lowest_price_cents'][:-2])-1)
         except:
-            return self.__get_PLN(int(json.loads(r.text)['high_demand_price_cents'][:-2]))
+            return self.__get_PLN(int(json.loads(r.text)['high_demand_price_cents'][:-2])-1)
 
     def __get_PLN(self, price):
         # Compare self.margin from settings to margin based on alias price in USD and net price in PLN
