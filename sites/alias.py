@@ -1,7 +1,7 @@
 import time
 import json
 import cloudscraper
-from add import get_exchange
+from add import get_settings
 
 
 class Alias:
@@ -19,8 +19,9 @@ class Alias:
                         'Connection': 'keep-alive',
                         'Host': 'sell-api.goat.com',
                         }
+        self.proxy = get_settings('proxy')
         self.scraper = self.__log_in(username, password)
-        self.usd = get_exchange()
+        self.usd = get_settings('usd_rate')
 
     def __log_in(self, username, password):
         # Logs into alias account
@@ -32,7 +33,7 @@ class Alias:
         while True:
             try:
                 r = scraper.post(data=json.dumps(
-                    data), headers=self.headers, url=self.url+'/unstable/users/login')
+                    data), headers=self.headers, url=self.url+'/unstable/users/login', proxies={"https": self.proxy})
                 access = json.loads(r.text)["auth_token"]['access_token']
                 self.headers['Authorization'] = 'Bearer {}'.format(access)
                 print("Logged into alias account")
@@ -57,7 +58,8 @@ class Alias:
             'Connection': 'keep-alive',
             'Host': '2fwotdvm2o-dsn.algolia.net'
         }
-        r = self.scraper.get(headers=headers, url=url)
+        r = self.scraper.get(headers=headers, url=url,
+                             proxies={"https": self.proxy})
         try:
             return str([x['slug'] for x in json.loads(r.text)['hits']][0])
         except IndexError:
@@ -73,7 +75,7 @@ class Alias:
         data = {"variant": {"id": product, "size": size, "productCondition": '1',
                             "packagingCondition": '1', "consigned": 'false', "regionId": "2"}}
         r = self.scraper.post(data=json.dumps(data), headers=self.headers,
-                              url=self.url+'/analytics/variants/availability')
+                              url=self.url+'/analytics/variants/availability', proxies={"https": self.proxy})
 
         try:
             return self.__get_PLN(int(json.loads(r.text)['lowest_price_cents'][:-2])-1)

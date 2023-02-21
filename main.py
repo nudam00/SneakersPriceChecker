@@ -37,8 +37,9 @@ if __name__ == "__main__":
         stealth_sync(page)
 
         # Logging in
-        alias = Alias(get_settings('username'), get_settings('alias_password'))
-        stockx = StockX(get_settings('username'), get_settings(
+        alias = Alias(get_settings('alias_username'),
+                      get_settings('alias_password'))
+        stockx = StockX(get_settings('email'), get_settings(
             'stockx_password'), page, get_settings('stockx_fee'))
 
         for i in range(len(pd.ExcelFile('input/stock.xlsx').sheet_names)):

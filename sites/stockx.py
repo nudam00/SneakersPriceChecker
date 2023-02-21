@@ -1,11 +1,11 @@
-from add import get_exchange
+from add import get_settings
 import time
 
 
 class StockX:
 
     def __init__(self, username, password, p, stockx_fee):
-        self.usd = get_exchange()
+        self.usd = get_settings('usd_rate')
         self.p = p
         self.stockx_fee = stockx_fee
         while self.__log_in(username, password) == False:

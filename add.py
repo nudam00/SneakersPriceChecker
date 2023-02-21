@@ -2,11 +2,6 @@ from forex_python.converter import CurrencyRates
 import json
 
 
-def get_exchange():
-    # Get exchange rate USD/PLN
-    return get_settings('usd_rate')
-
-
 def get_settings(setting):
     # Gets setting from settings.json
     settings_file = open("input/settings.json")
