@@ -17,7 +17,6 @@ if __name__ == "__main__":
           "Women - e.g. 9W/9.5W\n"
           "Gs - e.g. 6Y/6.5Y\n"
           'Td - e.g. 2C\n'
-          "3. Write net price in PLN\n"
           '\n'
           'Write anything when you would like to start\n')
     input()
