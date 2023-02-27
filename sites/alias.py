@@ -67,7 +67,7 @@ class Alias:
             return False
 
     def get_price(self, sku, size):
-        # Gets price
+        # Gets price from site
         product = self.__get_product(sku)
 
         if product == False:
@@ -83,7 +83,7 @@ class Alias:
             return self.__get_PLN(int(json.loads(r.text)['high_demand_price_cents'][:-2])-1)
 
     def __get_PLN(self, price):
-        # Compare self.margin from settings to margin based on alias price in USD and net price in PLN
+        # Gets price in PLN after fees
 
         try:
             price_pln = (price*0.905-12)*self.usd*0.971

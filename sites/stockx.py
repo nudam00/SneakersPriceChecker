@@ -28,7 +28,7 @@ class StockX:
             self.p.locator('xpath=//button[@class="toggle-option"]').click()
             time.sleep(5)
 
-            # Logging in
+            # Log in
             self.p.locator('xpath=//input[@id="email-login"]').type(username)
             time.sleep(1)
             self.p.locator(
@@ -104,7 +104,7 @@ class StockX:
             return False
 
     def __get_PLN(self, price):
-        # Compare self.margin from settings to margin based on stockx price in USD and net price in PLN
+        # Gets price in PLN after fees
 
         try:
             price_pln = (price-(price*0.03)-(price*self.stockx_fee))*self.usd

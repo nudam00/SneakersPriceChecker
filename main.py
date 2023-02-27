@@ -57,7 +57,7 @@ if __name__ == "__main__":
                     size = str(row['size'])
                 sku = row['sku']
 
-                # If same shoe as before then get saved data from earlier iteration
+                # If same shoe as before then get data from earlier iteration
                 if size == new_row['Size'] and sku == new_row['SKU']:
                     pass
                 else:
