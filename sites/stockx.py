@@ -94,9 +94,9 @@ class StockX:
                 price = self.__get_PLN(float(self.p.locator(
                     'xpath=//*[@id="main-container"]/div[1]/div[2]/div[5]/div[2]/div[3]/div/span/div/div/input').get_attribute("value")))
                 item_name1 = self.p.locator(
-                    'xpath=//*[@id="main-container"]/div[1]/div[2]/div[1]/div/div/div[1]').inner_text()
+                    'xpath=//*[@id="main-container"]/div[1]/div[2]/div[1]/div/div[1]/div[1]').inner_text()
                 item_name2 = self.p.locator(
-                    'xpath=//*[@id="main-container"]/div[1]/div[2]/div[1]/div/div/div[2]').inner_text()
+                    'xpath=//*[@id="main-container"]/div[1]/div[2]/div[1]/div/div[1]/div[2]').inner_text()
                 return [item_name1+" "+item_name2, price]
             except:
                 return False
