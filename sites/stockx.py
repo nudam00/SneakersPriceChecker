@@ -99,7 +99,7 @@ class StockX:
                     'xpath=//*[@id="main-container"]/div[1]/div[2]/div[1]/div/div[1]/div[2]').inner_text()
                 return [item_name1+" "+item_name2, price]
             except:
-                return False
+                return [None, None]
         else:
             return False
 
