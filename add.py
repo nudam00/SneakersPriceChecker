@@ -20,3 +20,14 @@ def best_site(stockx, alias):
         sites = 'StockX/Alias'
         best_price = alias
     return [sites, best_price]
+
+
+def add_site(best_price, klekt, wethenew, hypeboost):
+    add_sites = ''
+    if klekt >= best_price:
+        add_sites = add_sites + "Klekt/"
+    if wethenew >= best_price:
+        add_sites = add_sites + "Wethenew/"
+    if hypeboost >= best_price:
+        add_sites = add_sites + "Hypeboost/"
+    return add_sites

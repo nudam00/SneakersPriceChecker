@@ -108,8 +108,8 @@ class StockX:
 
         try:
             price_pln = (price-(price*0.03)-(price*self.stockx_fee))*self.usd
-            # Rounding down to tens (better comparison)
             a = price_pln % 10
-            return price_pln-a
+            price_pln = price_pln-a
+            return price_pln
         except (TypeError, ValueError):
             return False

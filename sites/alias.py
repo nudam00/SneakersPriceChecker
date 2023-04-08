@@ -87,8 +87,8 @@ class Alias:
 
         try:
             price_pln = (price*0.905-12)*self.usd*0.971
-            # Rounding down to tens
             a = price_pln % 10
-            return price_pln-a
+            price_pln = price_pln-a
+            return price_pln
         except (TypeError, ValueError):
             return False
