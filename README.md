@@ -7,6 +7,7 @@ Program which scraps sneaker prices based on **sku** and **size** and writes out
 3. Klekt - prices must be in EUR.
 4. Wethenew - prices must be in EUR.
 5. Hypeboost - prices must be in EUR.
+6. Sneakit - prices must be in EUR.
 
    <br />
    StockX ends up blocked by PerimeterX quite often, so PerimeterX needs to be resolved sometimes.<br />

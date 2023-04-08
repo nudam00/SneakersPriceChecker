@@ -3,6 +3,7 @@ from sites.stockx import StockX
 from sites.klekt import Klekt
 from sites.wethenew import Wethenew
 from sites.hypeboost import Hypeboost
+from sites.sneakit import Sneakit
 from add import get_settings, best_site, add_site
 from playwright.sync_api import sync_playwright
 from playwright_stealth import stealth_sync
@@ -47,6 +48,7 @@ if __name__ == "__main__":
         wethenew = Wethenew(get_settings('email'), get_settings(
             'wethenew_password'), page)
         hypeboost = Hypeboost()
+        sneakit = Sneakit()
 
         for i in range(len(pd.ExcelFile('input/stock.xlsx').sheet_names)):
             # Creating dataframe
@@ -80,11 +82,13 @@ if __name__ == "__main__":
                         sku, sizes_converter.wethenew(product_name.lower()))
                     hypeboost_price = hypeboost.get_price(
                         sku, sizes_converter.hypeboost(product_name.lower()))
+                    sneakit_price = sneakit.get_price(
+                        sku, sizes_converter.sneakit(product_name.lower()))
 
                     # Best price
                     site, best_price = best_site(stockx_price, alias_price)
                     add_sites = add_site(
-                        best_price, klekt_price, wethenew_price, hypeboost_price, net_price, get_settings('margin'))
+                        best_price, klekt_price, wethenew_price, hypeboost_price, sneakit_price, net_price, get_settings('margin'))
 
                     try:
                         best_price = str(best_price).replace('.', ',')

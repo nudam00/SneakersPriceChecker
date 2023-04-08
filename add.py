@@ -22,7 +22,7 @@ def best_site(stockx, alias):
     return [sites, best_price]
 
 
-def add_site(best_price, klekt, wethenew, hypeboost, net_price, margin):
+def add_site(best_price, klekt, wethenew, hypeboost, sneakit, net_price, margin):
     # Checks additional sites
     add_sites = ''
     if klekt >= best_price and (klekt-net_price)/net_price >= margin:
@@ -31,4 +31,6 @@ def add_site(best_price, klekt, wethenew, hypeboost, net_price, margin):
         add_sites = add_sites + "Wethenew/"
     if hypeboost >= best_price and (hypeboost-net_price)/net_price >= margin:
         add_sites = add_sites + "Hypeboost/"
+    if sneakit >= best_price and (sneakit-net_price)/net_price >= margin:
+        add_sites = add_sites + "Sneakit/"
     return add_sites

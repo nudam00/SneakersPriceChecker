@@ -75,3 +75,27 @@ class Size:
             return sizes['Nike'][self.size]
         elif "ugg" in name:
             return sizes['UGG'][self.size]
+
+    def sneakit(self, name):
+        json_file = open("converters/sneakit.json")
+        sizes = json.load(json_file)
+
+        t = 0
+        for size in sizes['Adidas']:
+            t += 1
+            if t == 2:
+                sizes['Adidas'][size] = sizes['Adidas'][size].replace(
+                    "â…”", '⅔')
+            elif t == 3:
+                sizes['Adidas'][size] = sizes['Adidas'][size].replace(
+                    "â…“", '⅓')
+                t = 0
+
+        if "new balance" in name:
+            return sizes['New_balance'][self.size]
+        elif "adidas" in name:
+            return sizes['Adidas'][self.size]
+        elif "nike" in name or "jordan" in name:
+            return sizes['Nike'][self.size]
+        elif "ugg" in name:
+            return sizes['UGG'][self.size]

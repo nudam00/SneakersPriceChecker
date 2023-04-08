@@ -27,7 +27,7 @@ class Hypeboost:
                 return False
             return soup.find('a')['href']
         except:
-            return 0
+            return False
 
     def get_price(self, sku, size):
         # Gets sizes
