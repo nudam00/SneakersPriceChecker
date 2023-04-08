@@ -70,11 +70,8 @@ class Wethenew():
                 self.p.locator(
                     'xpath=//li[@role="button"]', has_text="WTB\n{}".format(size)).click()
             time.sleep(1)
-            print(self.p.locator(
-                'xpath=//span[@style="font-weight: 500;"]').inner_text())
             price = self.__get_PLN(float(self.p.locator(
                 'xpath=//span[@style="font-weight: 500;"]').inner_text().replace('€', ''))-1)
-            print(price)
             return price
         except:
             return 0

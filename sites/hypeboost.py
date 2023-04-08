@@ -39,7 +39,6 @@ class Hypeboost:
             headers=self.headers, url=product).text, features="lxml")
         dom = etree.HTML(str(soup))
 
-        sizes = []
         for i in range(1, 25):
             try:
                 s = dom.xpath(
@@ -49,7 +48,7 @@ class Hypeboost:
                         '//*[@id="page-product"]/div[1]/div[1]/div[2]/div/div[1]/div/div[2]/div/div[{}]/div[2]/span'.format(i))[0].text.replace(' €', ''))-1)
             except:
                 pass
-        return sizes
+        return 0
 
     def __get_price(self, price):
         # Gets price in PLN after fees
