@@ -86,6 +86,11 @@ if __name__ == "__main__":
                     add_sites = add_site(
                         best_price, klekt_price, wethenew_price, hypeboost_price, net_price, get_settings('margin'))
 
+                    try:
+                        best_price = str(best_price).replace('.', ',')
+                    except:
+                        continue
+
                     new_row = {'Product_name': product_name, 'SKU': sku, 'Size': str(row['size']), 'StockX_payout': str(stockx_price).replace(
                         '.', ','), 'Alias_payout': str(alias_price).replace('.', ','), 'Best_site': site, 'Best_price': str(best_price).replace('.0', ',0'),
                         'Additional_sites': add_sites}
