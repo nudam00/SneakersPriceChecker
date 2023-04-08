@@ -38,7 +38,7 @@ if __name__ == "__main__":
         page = browser.new_page()
         stealth_sync(page)
 
-        # Logging in
+        # Preparing
         alias = Alias(get_settings('alias_username'),
                       get_settings('alias_password'))
         stockx = StockX(get_settings('email'), get_settings(
@@ -49,7 +49,7 @@ if __name__ == "__main__":
         hypeboost = Hypeboost()
 
         for i in range(len(pd.ExcelFile('input/stock.xlsx').sheet_names)):
-            # Creaeting dataframe
+            # Creating dataframe
             df = pd.DataFrame(columns=['Product_name', 'SKU', 'Size', 'StockX_payout',
                                        'Alias_payout', 'Best_site', 'Best_price', 'Additional_sites'])
             excel = pd.read_excel('input/stock.xlsx', sheet_name=i)
@@ -57,13 +57,15 @@ if __name__ == "__main__":
                        'Alias_payout': '', 'Best_site': '', 'Best_price': '', 'Additional_sites': ''}
 
             for index, row in excel.iterrows():
+                # Getting inputs
                 if '.0' in str(row['size']):
                     size = str(row['size']).replace('.0', '')
                 else:
                     size = str(row['size'])
                 sku = row['sku']
+                net_price = float(str(row['price_net']).replace(',', '.'))
 
-                # If same shoe as before then get data from earlier iteration
+                # If same shoe as before then get data from latest iteration
                 if size == new_row['Size'] and sku == new_row['SKU']:
                     pass
                 else:
@@ -82,7 +84,7 @@ if __name__ == "__main__":
                     # Best price
                     site, best_price = best_site(stockx_price, alias_price)
                     add_sites = add_site(
-                        best_price, klekt_price, wethenew_price, hypeboost_price)
+                        best_price, klekt_price, wethenew_price, hypeboost_price, net_price, get_settings('margin'))
 
                     new_row = {'Product_name': product_name, 'SKU': sku, 'Size': str(row['size']), 'StockX_payout': str(stockx_price).replace(
                         '.', ','), 'Alias_payout': str(alias_price).replace('.', ','), 'Best_site': site, 'Best_price': str(best_price).replace('.0', ',0'),

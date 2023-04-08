@@ -10,7 +10,7 @@ Program which scraps sneaker prices based on **sku** and **size** and writes out
 
    <br />
    StockX ends up blocked by PerimeterX quite often, so PerimeterX needs to be resolved sometimes.<br />
-   StockX and Alias are basic sites, it will prints out Klekt/Wethenew/Hypeboost only if the price is equal or higher than price on StockX/Alias.
+   StockX and Alias are basic sites, it will prints out Klekt/Wethenew/Hypeboost only if the price is equal or higher than price on StockX/Alias and if the margin is above margin given in settings.json.
    Written in Python using Playwright, requests and cloudsraper.
 
 ## Converters
@@ -19,14 +19,15 @@ size_converter.py - converts all sizes to fit the page.
 
 ## Input
 
-### settings.json - write your credentials on Alias and StockX fee
+### settings.json - create that by yourself
 
-`{"email": "x", "alias_username": "x", "alias_password": "x", "stockx_password": "x", "wethenew_password": "x", "stockx_fee": 0.x, "usd_rate": x, "eur_rate": x, "proxy": "http://username:passw@ip:port"}`
+`{"email": "x", "alias_username": "x", "alias_password": "x", "stockx_password": "x", "wethenew_password": "x", "stockx_fee": 0.x, "usd_rate": x, "eur_rate": x, "proxy": "http://username:passw@ip:port", "margin": x}`
 
 ### stock.xlsx
 
 1. Write SKU.
 2. Write size in US.
+3. Write net price
    <br />
 
 ## Output
@@ -43,7 +44,7 @@ Look at:
 
 ## Sites
 
-Classes needed for checking prices
+Classes needed for checking prices.
 <br />
 
 ## add.py

@@ -57,7 +57,7 @@ class Wethenew():
     def get_price(self, sku, size):
         # Gets price
 
-        # Sometimes there are more than one product page
+        # Unfortunately sometimes there are more than one product page so then it won't work
         url = self.__get_product(sku)
         if url == None:
             return 0
@@ -84,9 +84,6 @@ class Wethenew():
 
         try:
             price_pln = (price/1.2)*self.eur
-            # Rounding down to tens
-            a = price_pln % 10
-            price_pln = price_pln-a
             return price_pln
         except (TypeError, ValueError):
             return 0

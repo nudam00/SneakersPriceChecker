@@ -44,8 +44,6 @@ class Klekt:
         # Gets price in PLN after fees
         try:
             price_pln = (price/1.17-5)/1.21*self.eur
-            a = price_pln % 10
-            price_pln = price_pln-a
             return price_pln
         except (TypeError, ValueError):
             return 0

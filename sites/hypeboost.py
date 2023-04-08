@@ -55,8 +55,6 @@ class Hypeboost:
         # Gets price in PLN after fees
         try:
             price_pln = (price*0.93-10)/1.21*self.eur
-            a = price_pln % 10
-            price_pln = price_pln-a
             return price_pln
         except (TypeError, ValueError):
             return 0
