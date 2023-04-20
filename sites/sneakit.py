@@ -41,6 +41,7 @@ class Sneakit:
             for x in json.loads(r)['sizesPrices']:
                 if str(x['size']) == size:
                     return self.__get_price(float(x['price'])-1)
+            return 0
         except:
             return 0
 

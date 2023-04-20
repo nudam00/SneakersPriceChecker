@@ -66,6 +66,8 @@ if __name__ == "__main__":
                     size = str(row['size'])
                 sku = row['sku']
                 net_price = float(str(row['price_net']).replace(',', '.'))
+                stockx_days = row['stockx']
+                alias_days = row['alias']
 
                 # If same shoe as before then get data from latest iteration
                 if size == new_row['Size'] and sku == new_row['SKU']:
@@ -86,9 +88,10 @@ if __name__ == "__main__":
                         sku, sizes_converter.sneakit(product_name.lower()))
 
                     # Best price
-                    site, best_price = best_site(stockx_price, alias_price)
+                    site, better_site, best_price, better_price = best_site(
+                        stockx_price, alias_price, stockx_days, alias_days)
                     add_sites = add_site(
-                        best_price, klekt_price, wethenew_price, hypeboost_price, sneakit_price, net_price, get_settings('margin'))
+                        best_price, klekt_price, wethenew_price, hypeboost_price, sneakit_price, net_price, get_settings('margin'), better_site, better_price)
 
                     try:
                         best_price = str(best_price).replace('.', ',')
