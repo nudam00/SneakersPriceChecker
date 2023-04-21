@@ -1,20 +1,45 @@
 import json
 from add import get_settings
 import cloudscraper
+from bs4 import BeautifulSoup
+from lxml import etree
 
 
 class Sneakit:
 
-    def __init__(self):
+    def __init__(self, username, password):
         self.url = 'https://sneakit.com/search/product'
-        self.scraper = cloudscraper.create_scraper()
         self.eur = get_settings('eur_rate')
-        print("Logged into Klekt account")
-        self.headers = {'Accept': 'application/json',
+        self.headers = {'Accept': '*/*',
                         'Accept-Encoding': 'gzip, deflate',
                         'Accept-Language': 'pl-PL,pl;q=0.9,en-US;q=0.8,en;q=0.7,fa;q=0.6',
                         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36',
+                        'Content-Type': 'application/x-www-form-urlencoded'
                         }
+        self.scraper = self.__log_in(username, password)
+
+    def __log_in(self, username, password):
+        # Logs into sneakit account
+
+        scraper = cloudscraper.create_scraper()
+        soup = BeautifulSoup(scraper.get(
+            url='https://sneakit.com/login').text, features="lxml")
+        token = soup.find('meta', {'name': 'csrf-token'})['content']
+
+        data = {"_token": token,
+                "email": username, "password": password}
+
+        while True:
+            try:
+                r = scraper.post(headers=self.headers, data=data,
+                                 url='https://sneakit.com/login')
+                if '200' in str(r):
+                    print("Logged into Sneakit account")
+                    return scraper
+                else:
+                    continue
+            except:
+                continue
 
     def __get_product(self, sku):
         # Gets product link
@@ -48,7 +73,7 @@ class Sneakit:
     def __get_price(self, price):
         # Gets price in PLN after fees
         try:
-            price_pln = (price/1.2)*self.eur
+            price_pln = price*self.eur
             return price_pln
         except (TypeError, ValueError):
             return 0

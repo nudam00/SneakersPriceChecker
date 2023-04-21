@@ -36,7 +36,7 @@ class Alias:
                     data), headers=self.headers, url=self.url+'/unstable/users/login', proxies={"https": self.proxy})
                 access = json.loads(r.text)["auth_token"]['access_token']
                 self.headers['Authorization'] = 'Bearer {}'.format(access)
-                print("Logged into alias account")
+                print("Logged into Alias account")
                 return scraper
             except:
                 continue

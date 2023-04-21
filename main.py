@@ -42,13 +42,14 @@ if __name__ == "__main__":
         # Preparing
         alias = Alias(get_settings('alias_username'),
                       get_settings('alias_password'))
+        hypeboost = Hypeboost()
+        klekt = Klekt()
+        sneakit = Sneakit(get_settings('email'), get_settings(
+            'sneakit_password'))
         stockx = StockX(get_settings('email'), get_settings(
             'stockx_password'), page, get_settings('stockx_fee'))
-        klekt = Klekt()
         wethenew = Wethenew(get_settings('email'), get_settings(
             'wethenew_password'), page)
-        hypeboost = Hypeboost()
-        sneakit = Sneakit()
 
         for i in range(len(pd.ExcelFile('input/stock.xlsx').sheet_names)):
             # Creating dataframe
