@@ -12,7 +12,7 @@ Program which scraps sneaker prices based on **sku** and **size** and writes out
    <br />
    StockX ends up blocked by PerimeterX quite often, so PerimeterX needs to be resolved sometimes.<br />
    StockX and Alias are basic sites, it will prints out Klekt/Wethenew/Hypeboost only if the price is equal or higher than price on StockX/Alias and if the margin is above margin given in settings.json.
-   In stock.xlsx there are two columns calles stockx and alias. You can write here "NIE" (means that it sells rarely) or "TAK" (means that it sell quite often). Example: If you write "NIE" in stockx column and "TAK" in alias column then even if the price on StockX is higher than on Alias it will take Alias price as the highest one. If you write "TAK" in stockx column and price is higher than on Alias then it will print out StockX only.<br />
+   In stock.xlsx there are two columns called stockx and alias. You can write here "NIE" (means that it sells rarely) or "TAK" (means that it sell quite often). Example: If you write "NIE" in stockx column and "TAK" in alias column then even if the price on StockX is higher than on Alias it will take Alias price as the highest one. If you write "TAK" in stockx column and price is higher than on Alias then it will print out StockX only.<br />
    Written in Python using Playwright, requests and cloudsraper.
 
 ## Converters

@@ -46,7 +46,7 @@ class Wethenew():
             self.p.wait_for_load_state('load')
             time.sleep(2)
             self.p.locator(
-                'xpath=//*[@id="__next"]/div/div[1]/div/div/div[3]/div/div/div/div/div/div[2]/button').click(timeout=3000)
+                'xpath=//*[@id="__next"]/div/div[1]/div/div/div[3]/div/div/div/div/div/div[2]/button').click(timeout=4000)
             self.p.wait_for_load_state('load')
             time.sleep(2)
             return True
@@ -65,8 +65,12 @@ class Wethenew():
         try:
             try:
                 self.p.locator(
+                    'xpath=//li[@role="button"]', has_text=size).to_be_visible()
+                self.p.locator(
                     'xpath=//li[@role="button"]', has_text=size).click(timeout=3000, force=True, click_count=2)
             except:
+                self.p.locator(
+                    'xpath=//li[@role="button"]', has_text=size).to_be_visible()
                 self.p.locator(
                     'xpath=//li[@role="button"]', has_text="WTB\n{}".format(size)).click(timeout=3000, force=True, click_count=2)
             time.sleep(1)
