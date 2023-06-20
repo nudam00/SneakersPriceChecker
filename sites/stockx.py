@@ -6,6 +6,7 @@ class StockX:
 
     def __init__(self, username, password, p, stockx_fee):
         self.usd = get_settings('usd_rate')
+        self.eur = get_settings('eur_rate')
         self.p = p
         self.stockx_fee = stockx_fee
         while self.__log_in(username, password) == False:
@@ -108,7 +109,11 @@ class StockX:
         # Gets price in PLN after fees
 
         try:
-            price_pln = (price-(price*0.03)-(price*self.stockx_fee))*self.usd
+            if (price*self.stockx_fee*self.usd) > (9*self.eur):
+                price_pln = (price-(price*0.03) -
+                             (price*self.stockx_fee))*self.usd
+            else:
+                price_pln = ((price-(price*0.03))*self.usd)-(9*self.eur)
             return price_pln
         except (TypeError, ValueError):
             return False

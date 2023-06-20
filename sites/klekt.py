@@ -1,5 +1,4 @@
-from bs4 import BeautifulSoup
-from lxml import etree
+import json
 from add import get_settings
 import cloudscraper
 
@@ -14,31 +13,29 @@ class Klekt:
 
     def __get_product(self, sku):
         # Gets product link
-        soup = BeautifulSoup(self.scraper.get(
-            self.url+'brands?search={}'.format(sku)).text, features="lxml")
+        res = str(self.scraper.get(
+            self.url+'brands?search={}'.format(sku)).content)
         try:
-            return soup.find('a', {'class': 'pod-link'})['href']
+            return res.split('"slug":"')[1].split('"')[0]
         except:
             print('Klekt: No product found')
             return 0
 
     def get_price(self, sku, size):
         # Gets price
+
         try:
-            soup = BeautifulSoup(self.scraper.get(
-                self.url+self.__get_product(sku)).text, features="lxml")
-        except:
+            soup = str(self.scraper.get(
+                self.url+'product/{}'.format(self.__get_product(sku))).content)
+            variants = soup.split(
+                '"variants":[')[1].split(',"variantsNDD":')[0]
+            for variant in json.loads('{"variants":['+variants+'}')['variants']:
+                if variant['facetValues'][0]['name'] == size:
+                    return self.__get_price(variant['priceWithTax']/100-1)
             return 0
-        dom = etree.HTML(str(soup))
-        for i in range(1, 25):
-            try:
-                s = dom.xpath(
-                    '//*[@id="__next"]/div/div/div[3]/div/div[3]/div/div[4]/div[2]/div/div[{}]/span[1]/span'.format(i))[0].text
-                if s == size:
-                    return self.__get_price(int(dom.xpath(
-                        '//*[@id="__next"]/div/div/div[3]/div/div[3]/div/div[4]/div[2]/div/div[{}]/span[2]/span'.format(i))[1].text)-1)
-            except IndexError:
-                return 0
+        except Exception as e:
+            print(e)
+            return 0
 
     def __get_price(self, price):
         # Gets price in PLN after fees
