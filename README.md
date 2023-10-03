@@ -1,5 +1,6 @@
 # SneakersPriceChecker
 
+Not updated for a while, but it should still work. <br/>
 Program which scraps sneaker prices based on **sku** and **size** and writes out prices in PLN to the excel file. Scrapped sites:
 
 1. StockX - prices must be in USD.
