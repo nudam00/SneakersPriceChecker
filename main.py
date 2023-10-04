@@ -54,7 +54,7 @@ if __name__ == "__main__":
             get_settings("stockx_fee"),
         )
         wethenew = Wethenew(
-            get_settings("email"), get_settings("wethenew_password"), page
+            get_settings("wethenew_email"), get_settings("wethenew_password"), page
         )
 
         for i in range(len(pd.ExcelFile("input/stock.xlsx").sheet_names)):

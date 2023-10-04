@@ -119,7 +119,6 @@ class StockX:
                             .replace("$", "")
                         )
                     )
-                    print(price)
                 except:
                     try:
                         price = self.__get_PLN(
@@ -131,7 +130,6 @@ class StockX:
                                 .replace("$", "")
                             )
                         )
-                        print(price)
                     except:
                         try:
                             price = self.__get_PLN(

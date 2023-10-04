@@ -24,7 +24,7 @@ size_converter.py - converts all sizes to fit the page.
 
 ### settings.json - create that by yourself
 
-`{"email": "x", "alias_username": "x", "alias_password": "x", "stockx_password": "x", "wethenew_password": "x", "sneakit_password": "x", "stockx_fee": 0.x, "usd_rate": x, "eur_rate": x, "proxy": "http://username:passw@ip:port", "margin": x}`
+`{"email": "x", "alias_username": "x", "alias_password": "x", "stockx_password": "x", "wethenew_email_": "x", "wethenew_password": "x", "sneakit_password": "x", "stockx_fee": 0.x, "usd_rate": x, "eur_rate": x, "proxy": "http://username:passw@ip:port", "margin": x}`
 
 ### stock.xlsx
 

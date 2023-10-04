@@ -9,7 +9,7 @@ from add import get_settings
 
 class Sneakit:
     def __init__(self, username, password):
-        self.url = "https://sneakit.com/search/product"
+        self.url = "https://sell.sneakit.com/search/product"
         self.eur = get_settings("eur_rate")
         self.headers = {
             "Accept": "*/*",
