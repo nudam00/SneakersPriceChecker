@@ -53,9 +53,9 @@ if __name__ == "__main__":
             page,
             get_settings("stockx_fee"),
         )
-        wethenew = Wethenew(
-            get_settings("wethenew_email"), get_settings("wethenew_password"), page
-        )
+        # wethenew = Wethenew(
+        #     get_settings("wethenew_email"), get_settings("wethenew_password"), page
+        # )
 
         for i in range(len(pd.ExcelFile("input/stock.xlsx").sheet_names)):
             # Creating dataframe
@@ -104,9 +104,9 @@ if __name__ == "__main__":
                     product_name = stockx_data[0]
                     stockx_price = stockx_data[1]
                     klekt_price = klekt.get_price(sku, sizes_converter.klekt())
-                    wethenew_price = wethenew.get_price(
-                        sku, sizes_converter.wethenew(product_name.lower())
-                    )
+                    # wethenew_price = wethenew.get_price(
+                    #     sku, sizes_converter.wethenew(product_name.lower())
+                    # )
                     hypeboost_price = hypeboost.get_price(
                         sku, sizes_converter.hypeboost(product_name.lower())
                     )
@@ -121,7 +121,8 @@ if __name__ == "__main__":
                     add_sites = add_site(
                         best_price,
                         klekt_price,
-                        wethenew_price,
+                        # wethenew_price,
+                        0,
                         hypeboost_price,
                         sneakit_price,
                         net_price,

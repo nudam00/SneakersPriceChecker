@@ -74,7 +74,7 @@ class Sneakit:
     def __get_price(self, price):
         # Gets price in PLN after fees
         try:
-            price_pln = price * self.eur
+            price_pln = price * self.eur * 0.971
             return price_pln
         except (TypeError, ValueError):
             return 0

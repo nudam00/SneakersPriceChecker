@@ -139,7 +139,6 @@ class StockX:
                                     ).get_attribute("value")
                                 )
                             )
-                            print(price)
                         except:
                             return [None, None]
 

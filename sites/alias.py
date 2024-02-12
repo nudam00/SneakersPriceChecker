@@ -13,7 +13,7 @@ class Alias:
             "Accept": "application/json",
             "Accept-Encoding": "gzip, deflate, br",
             "Accept-Language": "pl-PL,pl;q=0.9",
-            "User-Agent": "alias/1.20.1 (iPhone; iOS 16.2; Scale/3.00) Locale/en",
+            "User-Agent": "alias/1.28.0 (iPhone; iOS 17; Scale/3.00) Locale/en",
             "x-emb-id": "2389040D96C04834A761C65276AC5564",
             "x-emb-st": str(int(time.time() * 1000)),
             "X-PX-AUTHORIZATION": "3",
@@ -67,6 +67,7 @@ class Alias:
         }
         # r = self.scraper.get(headers=headers, url=url,
         #                      proxies={"https": self.proxy})
+        time.sleep(2)
         r = self.scraper.get(headers=headers, url=url)
         try:
             return str([x["slug"] for x in json.loads(r.text)["hits"]][0])
@@ -111,7 +112,7 @@ class Alias:
         # Gets price in PLN after fees
 
         try:
-            price_pln = (price * 0.905 - 12) * self.usd * 0.971
+            price_pln = (price * 0.905 - 6) * self.usd * 0.971
             return price_pln
         except (TypeError, ValueError):
             return False
